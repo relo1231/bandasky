@@ -1,65 +1,150 @@
-import Image from "next/image";
+import type { Metadata } from 'next'
+import Link from 'next/link'
+import { supabase } from '@/lib/supabase'
+import type { Kategoria, Produkt } from '@/types'
+import { ProduktKarta } from '@/components/ProduktKarta'
 
-export default function Home() {
+export const metadata: Metadata = {
+  title: 'Domov',
+  description: 'B2B dopytový e-shop – vyberte produkty a pošlite dopyt.',
+}
+
+const kategoriaIkony: Record<string, string> = {
+  stroje: '⚙️',
+  prislusenstvo: '🔧',
+  servis: '🛠️',
+}
+
+async function getKategorie(): Promise<Kategoria[]> {
+  const { data } = await supabase.from('kategorie').select('*').order('nazov')
+  return data ?? []
+}
+
+async function getFeaturedProdukty(): Promise<Produkt[]> {
+  const { data } = await supabase
+    .from('produkty')
+    .select('*, kategorie(*)')
+    .eq('aktivny', true)
+    .order('zoradenie', { ascending: false })
+    .limit(4)
+  return data ?? []
+}
+
+export default async function HomePage() {
+  const [kategorie, featuredProdukty] = await Promise.all([
+    getKategorie(),
+    getFeaturedProdukty(),
+  ])
+
+  const nazovFirmy = process.env.NEXT_PUBLIC_NAZOV_FIRMY ?? 'B2B Shop'
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <>
+      {/* Hero */}
+      <section className="relative flex min-h-[85vh] items-center justify-center overflow-hidden bg-[#0a0a0a]">
+        <div
+          className="absolute inset-0 opacity-10"
+          style={{
+            backgroundImage:
+              'repeating-linear-gradient(0deg, transparent, transparent 49px, #2a2a2a 50px), repeating-linear-gradient(90deg, transparent, transparent 49px, #2a2a2a 50px)',
+          }}
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#0a0a0a]" />
+
+        <div className="relative z-10 mx-auto max-w-4xl px-4 text-center">
+          <p className="mb-4 font-heading text-sm font-semibold uppercase tracking-[0.3em] text-gold">
+            Profesionálne riešenia
           </p>
+          <h1 className="font-heading text-5xl font-bold uppercase leading-tight tracking-tight text-[#e8e8e8] sm:text-6xl lg:text-7xl">
+            {nazovFirmy}
+          </h1>
+          <p className="mx-auto mt-6 max-w-xl font-body text-lg text-[#888]">
+            Vyberte si z nášho sortimentu, pošlite dopyt a my vám pripravíme cenovú ponuku na mieru.
+          </p>
+          <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <Link
+              href="/produkty"
+              className="btn-primary inline-block bg-gold px-8 py-3 font-heading text-sm font-semibold uppercase tracking-widest text-[#0a0a0a] transition-colors hover:bg-gold-dark"
+            >
+              Pozrieť produkty
+            </Link>
+            <Link
+              href="/kosik"
+              className="inline-block border border-gold px-8 py-3 font-heading text-sm font-semibold uppercase tracking-widest text-gold transition-all hover:bg-gold hover:text-[#0a0a0a]"
+            >
+              Košík
+            </Link>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+      </section>
+
+      {/* Kategórie */}
+      {kategorie.length > 0 && (
+        <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+          <h2 className="mb-10 font-heading text-3xl font-bold uppercase tracking-wide text-[#e8e8e8]">
+            Kategórie
+          </h2>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {kategorie.map((kat) => (
+              <Link
+                key={kat.id}
+                href={`/produkty?kategoria=${kat.slug}`}
+                className="group flex items-center gap-4 rounded-sm border border-[#2a2a2a] bg-[#141414] p-5 transition-all duration-200 hover:border-gold hover:bg-[#1a1a1a]"
+              >
+                <span className="text-3xl">{kategoriaIkony[kat.slug] ?? '📦'}</span>
+                <div>
+                  <p className="font-heading text-base font-semibold uppercase tracking-wide text-[#e8e8e8] group-hover:text-gold transition-colors">
+                    {kat.nazov}
+                  </p>
+                  {kat.popis && (
+                    <p className="mt-0.5 text-sm text-[#888]">{kat.popis}</p>
+                  )}
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Featured produkty */}
+      {featuredProdukty.length > 0 && (
+        <section className="mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
+          <div className="mb-10 flex items-end justify-between">
+            <h2 className="font-heading text-3xl font-bold uppercase tracking-wide text-[#e8e8e8]">
+              Vybrané produkty
+            </h2>
+            <Link
+              href="/produkty"
+              className="font-heading text-sm font-semibold uppercase tracking-widest text-gold transition-colors hover:text-gold-dark"
+            >
+              Všetky →
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {featuredProdukty.map((p) => (
+              <ProduktKarta key={p.id} produkt={p} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* CTA Banner */}
+      <section className="border-y border-[#2a2a2a] bg-[#141414] py-16">
+        <div className="mx-auto max-w-4xl px-4 text-center">
+          <h2 className="font-heading text-3xl font-bold uppercase tracking-wide text-[#e8e8e8]">
+            Máte záujem?
+          </h2>
+          <p className="mx-auto mt-4 max-w-lg font-body text-[#888]">
+            Pošlite dopyt – ozvonime do 24 hodín a pripravíme vám cenovú ponuku na mieru.
+          </p>
+          <Link
+            href="/produkty"
+            className="btn-primary mt-8 inline-block bg-gold px-10 py-3 font-heading text-sm font-semibold uppercase tracking-widest text-[#0a0a0a] transition-colors hover:bg-gold-dark"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            Pozrieť produkty
+          </Link>
         </div>
-      </main>
-    </div>
-  );
+      </section>
+    </>
+  )
 }
