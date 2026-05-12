@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import { supabaseServer } from '@/lib/supabase'
 import type { Produkt } from '@/types'
 import { AdminSkladTable } from './AdminSkladTable'
+import { LogoutButton } from './LogoutButton'
 
 async function getProdukty(): Promise<Produkt[]> {
   const { data } = await supabaseServer
@@ -37,19 +38,7 @@ export default async function AdminPage() {
             </h1>
             <p className="mt-1 text-sm text-[#6b7fa3]">Bandasky – prehľad zásoby</p>
           </div>
-          <form action="/api/admin/login" method="POST">
-            <button
-              formAction="/api/admin/login"
-              onClick={async () => {
-                await fetch('/api/admin/login', { method: 'DELETE' })
-                window.location.href = '/admin/login'
-              }}
-              type="button"
-              className="border border-[#1a2a45] px-4 py-2 font-heading text-xs uppercase tracking-widest text-[#6b7fa3] transition-all hover:border-red-500 hover:text-red-400"
-            >
-              Odhlásiť
-            </button>
-          </form>
+          <LogoutButton />
         </div>
 
         {/* Stats */}
