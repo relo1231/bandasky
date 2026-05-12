@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { supabaseServer } from '@/lib/supabase'
-import { transporter, buildOwnerEmail, buildCustomerEmail } from '@/lib/email'
+import { posliEmailMajitelovi, posliEmailZakaznikovi } from '@/lib/email'
 import type { DopytFormData } from '@/types'
 
 function padStart(n: number, len: number): string {
@@ -57,29 +57,24 @@ export async function POST(req: Request) {
 
     const nazovFirmy = process.env.NEXT_PUBLIC_NAZOV_FIRMY ?? 'Bandasky'
     const emailPrijemca = process.env.EMAIL_PRIJEMCA
-    const senderEmail = process.env.BREVO_SMTP_LOGIN
 
-    if (emailPrijemca && senderEmail) {
+    if (emailPrijemca) {
       await Promise.allSettled([
-        transporter.sendMail({
-          from: `"${nazovFirmy}" <${senderEmail}>`,
-          to: emailPrijemca,
-          subject: `Nový dopyt č. ${cisloDopytu} – ${body.meno}`,
-          html: buildOwnerEmail({
-            cisloDopytu,
-            meno: body.meno,
-            firma: body.firma || null,
-            email: body.email,
-            telefon: body.telefon,
-            sprava: body.sprava || null,
-            polozky: body.polozky,
-          }),
+        posliEmailMajitelovi({
+          cisloDopytu,
+          meno: body.meno,
+          firma: body.firma || null,
+          email: body.email,
+          telefon: body.telefon,
+          sprava: body.sprava || null,
+          polozky: body.polozky,
+          prijemca: emailPrijemca,
         }),
-        transporter.sendMail({
-          from: `"${nazovFirmy}" <${senderEmail}>`,
-          to: body.email,
-          subject: `Potvrdenie dopytu č. ${cisloDopytu}`,
-          html: buildCustomerEmail({ cisloDopytu, meno: body.meno, nazovFirmy }),
+        posliEmailZakaznikovi({
+          cisloDopytu,
+          meno: body.meno,
+          nazovFirmy,
+          email: body.email,
         }),
       ])
     }

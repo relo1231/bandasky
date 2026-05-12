@@ -1,16 +1,39 @@
-import nodemailer from 'nodemailer'
+async function sendBrevoEmail(payload: {
+  to: string
+  subject: string
+  html: string
+  senderName?: string
+  senderEmail?: string
+}) {
+  const apiKey = process.env.BREVO_API_KEY
+  const senderEmail = payload.senderEmail ?? process.env.BREVO_SMTP_LOGIN ?? ''
+  const senderName = payload.senderName ?? (process.env.NEXT_PUBLIC_NAZOV_FIRMY ?? 'Bandasky')
 
-export const transporter = nodemailer.createTransport({
-  host: 'smtp-relay.brevo.com',
-  port: 587,
-  secure: false,
-  auth: {
-    user: process.env.BREVO_SMTP_LOGIN,
-    pass: process.env.BREVO_SMTP_KEY,
-  },
-})
+  if (!apiKey) throw new Error('BREVO_API_KEY nie je nastavený')
 
-export function buildOwnerEmail(data: {
+  const res = await fetch('https://api.brevo.com/v3/smtp/email', {
+    method: 'POST',
+    headers: {
+      'api-key': apiKey,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      sender: { name: senderName, email: senderEmail },
+      to: [{ email: payload.to }],
+      subject: payload.subject,
+      htmlContent: payload.html,
+    }),
+  })
+
+  if (!res.ok) {
+    const err = await res.text()
+    throw new Error(`Brevo API error: ${err}`)
+  }
+
+  return res.json()
+}
+
+export async function posliEmailMajitelovi(data: {
   cisloDopytu: string
   meno: string
   firma: string | null
@@ -18,7 +41,8 @@ export function buildOwnerEmail(data: {
   telefon: string
   sprava: string | null
   polozky: Array<{ nazov: string; mnozstvo: number; poznamka?: string | null }>
-}): string {
+  prijemca: string
+}) {
   const rows = data.polozky
     .map(
       (p) => `
@@ -30,7 +54,7 @@ export function buildOwnerEmail(data: {
     )
     .join('')
 
-  return `<!DOCTYPE html>
+  const html = `<!DOCTYPE html>
 <html><head><meta charset="utf-8"></head>
 <body style="background:#050d1a;color:#e2e8f0;font-family:Arial,sans-serif;padding:24px;">
   <div style="max-width:600px;margin:0 auto;background:#0a1628;border:1px solid #1a2a45;border-radius:4px;overflow:hidden;">
@@ -39,11 +63,11 @@ export function buildOwnerEmail(data: {
     </div>
     <div style="padding:24px;">
       <table style="width:100%;border-collapse:collapse;margin-bottom:24px;">
-        <tr><td style="padding:6px 0;color:#6b7fa3;width:110px;">Meno:</td><td style="padding:6px 0;">${data.meno}</td></tr>
-        <tr><td style="padding:6px 0;color:#6b7fa3;">Firma:</td><td style="padding:6px 0;">${data.firma || '–'}</td></tr>
-        <tr><td style="padding:6px 0;color:#6b7fa3;">Email:</td><td style="padding:6px 0;"><a href="mailto:${data.email}" style="color:#1e6fff;">${data.email}</a></td></tr>
-        <tr><td style="padding:6px 0;color:#6b7fa3;">Telefón:</td><td style="padding:6px 0;">${data.telefon}</td></tr>
-        ${data.sprava ? `<tr><td style="padding:6px 0;color:#6b7fa3;vertical-align:top;">Správa:</td><td style="padding:6px 0;">${data.sprava}</td></tr>` : ''}
+        <tr><td style="padding:6px 0;color:#6b7fa3;width:110px;">Meno:</td><td>${data.meno}</td></tr>
+        <tr><td style="padding:6px 0;color:#6b7fa3;">Firma:</td><td>${data.firma || '–'}</td></tr>
+        <tr><td style="padding:6px 0;color:#6b7fa3;">Email:</td><td><a href="mailto:${data.email}" style="color:#1e6fff;">${data.email}</a></td></tr>
+        <tr><td style="padding:6px 0;color:#6b7fa3;">Telefón:</td><td>${data.telefon}</td></tr>
+        ${data.sprava ? `<tr><td style="padding:6px 0;color:#6b7fa3;vertical-align:top;">Správa:</td><td>${data.sprava}</td></tr>` : ''}
       </table>
       <h2 style="color:#1e6fff;font-size:15px;margin-bottom:12px;">Objednané produkty:</h2>
       <table style="width:100%;border-collapse:collapse;border:1px solid #1a2a45;">
@@ -62,14 +86,21 @@ export function buildOwnerEmail(data: {
     </div>
   </div>
 </body></html>`
+
+  return sendBrevoEmail({
+    to: data.prijemca,
+    subject: `Nový dopyt č. ${data.cisloDopytu} – ${data.meno}`,
+    html,
+  })
 }
 
-export function buildCustomerEmail(data: {
+export async function posliEmailZakaznikovi(data: {
   cisloDopytu: string
   meno: string
   nazovFirmy: string
-}): string {
-  return `<!DOCTYPE html>
+  email: string
+}) {
+  const html = `<!DOCTYPE html>
 <html><head><meta charset="utf-8"></head>
 <body style="background:#050d1a;color:#e2e8f0;font-family:Arial,sans-serif;padding:24px;">
   <div style="max-width:600px;margin:0 auto;background:#0a1628;border:1px solid #1a2a45;border-radius:4px;overflow:hidden;">
@@ -84,4 +115,10 @@ export function buildCustomerEmail(data: {
     </div>
   </div>
 </body></html>`
+
+  return sendBrevoEmail({
+    to: data.email,
+    subject: `Potvrdenie dopytu č. ${data.cisloDopytu}`,
+    html,
+  })
 }
