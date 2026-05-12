@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { supabaseServer } from '@/lib/supabase'
-import { resend, buildOwnerEmail, buildCustomerEmail } from '@/lib/resend'
+import { transporter, buildOwnerEmail, buildCustomerEmail } from '@/lib/email'
 import type { DopytFormData } from '@/types'
 
 function padStart(n: number, len: number): string {
@@ -20,7 +20,6 @@ export async function POST(req: Request) {
   try {
     const body: DopytFormData = await req.json()
 
-    // Validácia
     if (!body.meno?.trim()) return NextResponse.json({ error: 'Meno je povinné' }, { status: 400 })
     if (!body.email?.trim()) return NextResponse.json({ error: 'Email je povinný' }, { status: 400 })
     if (!body.telefon?.trim()) return NextResponse.json({ error: 'Telefón je povinný' }, { status: 400 })
@@ -28,7 +27,6 @@ export async function POST(req: Request) {
 
     const cisloDopytu = await generujCisloDopytu()
 
-    // Vlož dopyt
     const { data: dopyt, error: dopytError } = await supabaseServer
       .from('dopyty')
       .insert({
@@ -47,32 +45,24 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Chyba pri ukladaní dopytu' }, { status: 500 })
     }
 
-    // Vlož položky
-    const polozkyData = body.polozky.map((p) => ({
-      dopyt_id: dopyt.id,
-      produkt_id: p.produktId,
-      nazov: p.nazov,
-      mnozstvo: p.mnozstvo,
-      poznamka: p.poznamka?.trim() || null,
-    }))
+    await supabaseServer.from('dopyt_polozky').insert(
+      body.polozky.map((p) => ({
+        dopyt_id: dopyt.id,
+        produkt_id: p.produktId,
+        nazov: p.nazov,
+        mnozstvo: p.mnozstvo,
+        poznamka: p.poznamka?.trim() || null,
+      }))
+    )
 
-    const { error: polozkyError } = await supabaseServer
-      .from('dopyt_polozky')
-      .insert(polozkyData)
-
-    if (polozkyError) {
-      console.error('Supabase polozky error:', polozkyError)
-    }
-
-    // Odošli emaily
-    const nazovFirmy = process.env.NEXT_PUBLIC_NAZOV_FIRMY ?? 'B2B Shop'
+    const nazovFirmy = process.env.NEXT_PUBLIC_NAZOV_FIRMY ?? 'Bandasky'
     const emailPrijemca = process.env.EMAIL_PRIJEMCA
+    const senderEmail = process.env.BREVO_SMTP_LOGIN
 
-    if (emailPrijemca) {
+    if (emailPrijemca && senderEmail) {
       await Promise.allSettled([
-        // Email majiteľovi
-        resend.emails.send({
-          from: `${nazovFirmy} <onboarding@resend.dev>`,
+        transporter.sendMail({
+          from: `"${nazovFirmy}" <${senderEmail}>`,
           to: emailPrijemca,
           subject: `Nový dopyt č. ${cisloDopytu} – ${body.meno}`,
           html: buildOwnerEmail({
@@ -85,9 +75,8 @@ export async function POST(req: Request) {
             polozky: body.polozky,
           }),
         }),
-        // Potvrdenie zákazníkovi
-        resend.emails.send({
-          from: `${nazovFirmy} <onboarding@resend.dev>`,
+        transporter.sendMail({
+          from: `"${nazovFirmy}" <${senderEmail}>`,
           to: body.email,
           subject: `Potvrdenie dopytu č. ${cisloDopytu}`,
           html: buildCustomerEmail({ cisloDopytu, meno: body.meno, nazovFirmy }),
