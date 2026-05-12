@@ -19,6 +19,7 @@ export type Produkt = {
   dostupnost: 'Na sklade' | 'Na objednávku' | 'Nedostupné'
   zoradenie: number
   aktivny: boolean
+  pocet_sklad: number
   created_at: string
   kategorie?: Kategoria
 }
