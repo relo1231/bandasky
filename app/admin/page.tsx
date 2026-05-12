@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { supabaseServer } from '@/lib/supabase'
-import type { Produkt } from '@/types'
+import type { Produkt, Kategoria } from '@/types'
 import { AdminSkladTable } from './AdminSkladTable'
 import { LogoutButton } from './LogoutButton'
 
@@ -13,12 +13,17 @@ async function getProdukty(): Promise<Produkt[]> {
   return data ?? []
 }
 
+async function getKategorie(): Promise<Kategoria[]> {
+  const { data } = await supabaseServer.from('kategorie').select('*').order('nazov')
+  return data ?? []
+}
+
 export default async function AdminPage() {
   const cookieStore = await cookies()
   const session = cookieStore.get('admin_session')?.value
   if (session !== process.env.ADMIN_SESSION_TOKEN) redirect('/admin/login')
 
-  const produkty = await getProdukty()
+  const [produkty, kategorie] = await Promise.all([getProdukty(), getKategorie()])
 
   const celkomSkladom = produkty
     .filter((p) => p.dostupnost === 'Na sklade')
@@ -78,7 +83,7 @@ export default async function AdminPage() {
         )}
 
         {/* Tabuľka */}
-        <AdminSkladTable produkty={produkty} />
+        <AdminSkladTable produkty={produkty} kategorie={kategorie} />
       </div>
     </div>
   )

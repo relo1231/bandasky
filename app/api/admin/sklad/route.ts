@@ -13,21 +13,34 @@ export async function PATCH(req: Request) {
     return NextResponse.json({ error: 'Neoprávnený prístup' }, { status: 401 })
   }
 
-  const { id, pocet_sklad, dostupnost } = await req.json()
+  const body = await req.json()
+  const { id, ...rest } = body
 
   if (typeof id !== 'number') {
     return NextResponse.json({ error: 'Chybajúce ID' }, { status: 400 })
   }
 
+  const allowed = [
+    'nazov', 'slug', 'popis', 'kratky_popis', 'cena_od', 'jednotka',
+    'kategoria_id', 'obrazok_url', 'dostupnost', 'pocet_sklad', 'zoradenie', 'aktivny',
+  ]
+
   const update: Record<string, unknown> = {}
-  if (typeof pocet_sklad === 'number') update.pocet_sklad = Math.max(0, pocet_sklad)
-  if (dostupnost) update.dostupnost = dostupnost
+  for (const key of allowed) {
+    if (key in rest) {
+      if (key === 'pocet_sklad' && typeof rest[key] === 'number') {
+        update[key] = Math.max(0, rest[key])
+      } else {
+        update[key] = rest[key]
+      }
+    }
+  }
 
   const { data, error } = await supabaseServer
     .from('produkty')
     .update(update)
     .eq('id', id)
-    .select('id, nazov, pocet_sklad, dostupnost')
+    .select('*, kategorie(*)')
     .single()
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
