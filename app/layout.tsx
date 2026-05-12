@@ -17,16 +17,14 @@ const dmSans = DM_Sans({
   weight: ['400', '500'],
 })
 
-const nazovFirmy = process.env.NEXT_PUBLIC_NAZOV_FIRMY ?? 'B2B Shop'
-
 export const metadata: Metadata = {
   title: {
-    default: nazovFirmy,
-    template: `%s | ${nazovFirmy}`,
+    default: 'Bandasky – 1000L nádrže na vodu',
+    template: '%s | Bandasky',
   },
-  description: `${nazovFirmy} – B2B dopytový e-shop. Vyberte produkty a pošlite dopyt.`,
+  description: 'Nové a repasované 1000L IBC nádrže na vodu. Rýchla doprava po celom Slovensku. Pošlite dopyt ešte dnes.',
   openGraph: {
-    siteName: nazovFirmy,
+    siteName: 'Bandasky',
     type: 'website',
   },
 }
@@ -34,7 +32,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="sk" className={`${oswald.variable} ${dmSans.variable} h-full antialiased`}>
-      <body className="flex min-h-full flex-col bg-[#0a0a0a] text-[#e8e8e8]">
+      <body className="flex min-h-full flex-col bg-[#050d1a] text-[#e2e8f0]">
         <KosikProvider>
           <Navbar />
           <main className="flex-1">{children}</main>

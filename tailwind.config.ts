@@ -9,21 +9,22 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        gold: {
-          DEFAULT: '#d4a017',
-          dark: '#b8880f',
+        accent: {
+          DEFAULT: '#1e6fff',
+          dark: '#1458d6',
+          light: '#60a5fa',
         },
         bg: {
-          DEFAULT: '#0a0a0a',
-          card: '#141414',
-          hover: '#1a1a1a',
+          DEFAULT: '#050d1a',
+          card: '#0a1628',
+          hover: '#0f1e38',
         },
         border: {
-          DEFAULT: '#2a2a2a',
+          DEFAULT: '#1a2a45',
         },
-        muted: '#888888',
-        success: '#4caf50',
-        danger: '#f44336',
+        muted: '#6b7fa3',
+        success: '#22c55e',
+        danger: '#ef4444',
       },
       fontFamily: {
         heading: ['var(--font-oswald)', 'sans-serif'],

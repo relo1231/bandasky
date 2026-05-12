@@ -4,8 +4,8 @@ import type { Kategoria, Produkt } from '@/types'
 import { ProduktKarta } from '@/components/ProduktKarta'
 
 export const metadata: Metadata = {
-  title: 'Produkty',
-  description: 'Prehliadajte náš sortiment a pridajte produkty do dopytu.',
+  title: 'Nádrže – 1000L IBC kontajnery',
+  description: 'Nové a repasované 1000L IBC nádrže na vodu. Skladom, rýchla doprava.',
 }
 
 async function getKategorie(): Promise<Kategoria[]> {
@@ -46,9 +46,15 @@ export default async function ProduktyPage({ searchParams }: Props) {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-      <h1 className="mb-8 font-heading text-4xl font-bold uppercase tracking-wide text-[#e8e8e8]">
-        Produkty
-      </h1>
+      <div className="mb-10">
+        <h1 className="font-heading text-4xl font-bold uppercase tracking-wide text-white">
+          IBC Nádrže
+        </h1>
+        <div className="mt-3 h-1 w-16 bg-[#1e6fff]" />
+        <p className="mt-3 text-[#6b7fa3]">
+          Nové a repasované 1000L kontajnery na vodu. Pridajte do dopytu a my vám zašleme ponuku.
+        </p>
+      </div>
 
       {/* Filter tabs */}
       <div className="mb-8 flex flex-wrap gap-2">
@@ -56,8 +62,8 @@ export default async function ProduktyPage({ searchParams }: Props) {
           href="/produkty"
           className={`rounded-sm border px-4 py-2 font-heading text-sm font-semibold uppercase tracking-wide transition-all ${
             !kategoria
-              ? 'border-gold bg-gold text-[#0a0a0a]'
-              : 'border-[#2a2a2a] text-[#888] hover:border-gold hover:text-gold'
+              ? 'border-[#1e6fff] bg-[#1e6fff] text-white'
+              : 'border-[#1a2a45] text-[#6b7fa3] hover:border-[#1e6fff] hover:text-[#1e6fff]'
           }`}
         >
           Všetky
@@ -68,8 +74,8 @@ export default async function ProduktyPage({ searchParams }: Props) {
             href={`/produkty?kategoria=${kat.slug}`}
             className={`rounded-sm border px-4 py-2 font-heading text-sm font-semibold uppercase tracking-wide transition-all ${
               kategoria === kat.slug
-                ? 'border-gold bg-gold text-[#0a0a0a]'
-                : 'border-[#2a2a2a] text-[#888] hover:border-gold hover:text-gold'
+                ? 'border-[#1e6fff] bg-[#1e6fff] text-white'
+                : 'border-[#1a2a45] text-[#6b7fa3] hover:border-[#1e6fff] hover:text-[#1e6fff]'
             }`}
           >
             {kat.nazov}
@@ -77,7 +83,6 @@ export default async function ProduktyPage({ searchParams }: Props) {
         ))}
       </div>
 
-      {/* Grid */}
       {produkty.length > 0 ? (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {produkty.map((p) => (
@@ -86,15 +91,15 @@ export default async function ProduktyPage({ searchParams }: Props) {
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center py-24 text-center">
-          <div className="text-5xl text-[#2a2a2a]">📦</div>
-          <p className="mt-4 font-heading text-lg uppercase tracking-wide text-[#888]">
+          <div className="text-5xl opacity-20">💧</div>
+          <p className="mt-4 font-heading text-lg uppercase tracking-wide text-[#6b7fa3]">
             Žiadne produkty v tejto kategórii
           </p>
           <a
             href="/produkty"
-            className="mt-6 text-sm text-gold hover:text-gold-dark transition-colors"
+            className="mt-6 text-sm text-[#1e6fff] hover:text-[#60a5fa] transition-colors"
           >
-            Zobraziť všetky produkty →
+            Zobraziť všetky →
           </a>
         </div>
       )}

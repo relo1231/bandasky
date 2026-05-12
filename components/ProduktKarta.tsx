@@ -10,19 +10,19 @@ type Props = {
 }
 
 const dostupnostStyle: Record<string, string> = {
-  'Na sklade': 'bg-[#1a3a1a] text-[#4caf50]',
-  'Na objednávku': 'bg-[#3a2a0a] text-[#d4a017]',
-  Nedostupné: 'bg-[#3a1a1a] text-[#f44336]',
+  'Na sklade': 'bg-green-950 text-green-400',
+  'Na objednávku': 'bg-blue-950 text-blue-400',
+  Nedostupné: 'bg-red-950 text-red-400',
 }
 
 export function ProduktKarta({ produkt }: Props) {
   const badgeClass =
-    dostupnostStyle[produkt.dostupnost] ?? 'bg-[#1a1a1a] text-[#888]'
+    dostupnostStyle[produkt.dostupnost] ?? 'bg-[#0a1628] text-[#6b7fa3]'
 
   return (
-    <div className="group flex flex-col rounded-sm border border-[#2a2a2a] bg-[#141414] transition-all duration-200 hover:border-gold">
+    <div className="group flex flex-col rounded-sm border border-[#1a2a45] bg-[#0a1628] transition-all duration-200 hover:border-[#1e6fff] hover:shadow-[0_0_20px_rgba(30,111,255,0.1)]">
       <Link href={`/produkty/${produkt.slug}`} className="block overflow-hidden">
-        <div className="relative h-48 w-full bg-[#1a1a1a]">
+        <div className="relative h-48 w-full bg-[#0f1e38]">
           {produkt.obrazok_url ? (
             <Image
               src={produkt.obrazok_url}
@@ -35,15 +35,12 @@ export function ProduktKarta({ produkt }: Props) {
             <div className="flex h-full w-full items-center justify-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-12 w-12 text-gold opacity-30"
+                className="h-12 w-12 text-[#1e6fff] opacity-30"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1}
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1}
                   d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
                 />
               </svg>
@@ -56,7 +53,7 @@ export function ProduktKarta({ produkt }: Props) {
         <div className="mb-2 flex items-start justify-between gap-2">
           <Link
             href={`/produkty/${produkt.slug}`}
-            className="font-heading text-base font-semibold uppercase tracking-wide text-[#e8e8e8] transition-colors hover:text-gold line-clamp-2"
+            className="font-heading text-base font-semibold uppercase tracking-wide text-[#e2e8f0] transition-colors hover:text-[#1e6fff] line-clamp-2"
           >
             {produkt.nazov}
           </Link>
@@ -66,11 +63,11 @@ export function ProduktKarta({ produkt }: Props) {
         </div>
 
         {produkt.kratky_popis && (
-          <p className="mb-3 line-clamp-2 text-sm text-[#888]">{produkt.kratky_popis}</p>
+          <p className="mb-3 line-clamp-2 text-sm text-[#6b7fa3]">{produkt.kratky_popis}</p>
         )}
 
-        <div className="mt-auto flex items-center justify-between gap-3 pt-3 border-t border-[#2a2a2a]">
-          <div className="font-heading text-lg font-bold text-gold">
+        <div className="mt-auto flex items-center justify-between gap-3 pt-3 border-t border-[#1a2a45]">
+          <div className="font-heading text-lg font-bold text-[#60a5fa]">
             {produkt.cena_od != null
               ? `od ${produkt.cena_od.toLocaleString('sk-SK')} €`
               : 'Na dopyt'}
