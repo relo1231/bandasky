@@ -30,6 +30,10 @@ export async function PATCH(req: Request) {
     if (key in rest) {
       if (key === 'pocet_sklad' && typeof rest[key] === 'number') {
         update[key] = Math.max(0, rest[key])
+      } else if (key === 'slug' && typeof rest[key] === 'string') {
+        update[key] = rest[key].trim().toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')
+      } else if (typeof rest[key] === 'string') {
+        update[key] = rest[key].trim()
       } else {
         update[key] = rest[key]
       }
