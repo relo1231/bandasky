@@ -33,71 +33,72 @@ async function getProdukty(kategoriaSlug?: string): Promise<Produkt[]> {
   return data ?? []
 }
 
-type Props = {
-  searchParams: Promise<{ kategoria?: string }>
-}
+type Props = { searchParams: Promise<{ kategoria?: string }> }
 
 export default async function ProduktyPage({ searchParams }: Props) {
   const { kategoria } = await searchParams
-  const [kategorie, produkty] = await Promise.all([
-    getKategorie(),
-    getProdukty(kategoria),
-  ])
+  const [kategorie, produkty] = await Promise.all([getKategorie(), getProdukty(kategoria)])
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-      <div className="mb-10">
-        <h1 className="font-heading text-4xl font-bold uppercase tracking-wide text-white">
+    <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+      {/* Header */}
+      <div className="mb-12 border-b border-[#1a1a1a] pb-10">
+        <div className="mb-4 inline-flex items-center gap-2">
+          <div className="h-0.5 w-8 bg-[#e8001e]" />
+          <span className="font-heading text-xs font-bold uppercase tracking-[0.25em] text-[#e8001e]">
+            Ponuka
+          </span>
+        </div>
+        <h1 className="font-heading text-5xl font-bold uppercase tracking-wide text-white">
           IBC Nádrže
         </h1>
-        <div className="mt-3 h-1 w-16 bg-[#1e6fff]" />
-        <p className="mt-3 text-[#6b7fa3]">
+        <p className="mt-4 max-w-xl text-[#666]">
           Nové a repasované 1000L kontajnery na vodu. Pridajte do dopytu a my vám zašleme ponuku.
         </p>
-      </div>
 
-      {/* Filter tabs */}
-      <div className="mb-8 flex flex-wrap gap-2">
-        <a
-          href="/produkty"
-          className={`rounded-sm border px-4 py-2 font-heading text-sm font-semibold uppercase tracking-wide transition-all ${
-            !kategoria
-              ? 'border-[#1e6fff] bg-[#1e6fff] text-white'
-              : 'border-[#1a2a45] text-[#6b7fa3] hover:border-[#1e6fff] hover:text-[#1e6fff]'
-          }`}
-        >
-          Všetky
-        </a>
-        {kategorie.map((kat) => (
+        {/* Filter */}
+        <div className="mt-8 flex flex-wrap gap-2">
           <a
-            key={kat.id}
-            href={`/produkty?kategoria=${kat.slug}`}
-            className={`rounded-sm border px-4 py-2 font-heading text-sm font-semibold uppercase tracking-wide transition-all ${
-              kategoria === kat.slug
-                ? 'border-[#1e6fff] bg-[#1e6fff] text-white'
-                : 'border-[#1a2a45] text-[#6b7fa3] hover:border-[#1e6fff] hover:text-[#1e6fff]'
+            href="/produkty"
+            className={`border px-5 py-2 font-heading text-sm font-bold uppercase tracking-widest transition-all ${
+              !kategoria
+                ? 'border-[#e8001e] bg-[#e8001e] text-white'
+                : 'border-[#242424] text-[#555] hover:border-[#e8001e] hover:text-white'
             }`}
           >
-            {kat.nazov}
+            Všetky
           </a>
-        ))}
+          {kategorie.map((kat) => (
+            <a
+              key={kat.id}
+              href={`/produkty?kategoria=${kat.slug}`}
+              className={`border px-5 py-2 font-heading text-sm font-bold uppercase tracking-widest transition-all ${
+                kategoria === kat.slug
+                  ? 'border-[#e8001e] bg-[#e8001e] text-white'
+                  : 'border-[#242424] text-[#555] hover:border-[#e8001e] hover:text-white'
+              }`}
+            >
+              {kat.nazov}
+            </a>
+          ))}
+        </div>
       </div>
 
       {produkty.length > 0 ? (
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-px bg-[#1a1a1a] sm:grid-cols-2 lg:grid-cols-3">
           {produkty.map((p) => (
             <ProduktKarta key={p.id} produkt={p} />
           ))}
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center py-24 text-center">
-          <div className="text-5xl opacity-20">💧</div>
-          <p className="mt-4 font-heading text-lg uppercase tracking-wide text-[#6b7fa3]">
+          <div className="font-heading text-6xl font-bold text-[#1a1a1a]">IBC</div>
+          <p className="mt-6 font-heading text-lg uppercase tracking-wide text-[#444]">
             Žiadne produkty v tejto kategórii
           </p>
           <a
             href="/produkty"
-            className="mt-6 text-sm text-[#1e6fff] hover:text-[#60a5fa] transition-colors"
+            className="mt-6 font-heading text-sm font-bold uppercase tracking-widest text-[#e8001e] hover:underline transition-colors"
           >
             Zobraziť všetky →
           </a>

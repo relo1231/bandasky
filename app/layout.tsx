@@ -32,7 +32,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="sk" className={`${oswald.variable} ${dmSans.variable} h-full antialiased`}>
-      <body className="flex min-h-full flex-col bg-[#050d1a] text-[#e2e8f0]">
+      <body className="flex min-h-full flex-col bg-[#0d0d0d] text-white">
         <KosikProvider>
           <Navbar />
           <main className="flex-1">{children}</main>
