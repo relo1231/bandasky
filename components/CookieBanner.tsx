@@ -179,7 +179,10 @@ export function CookieBanner() {
               <div className="flex items-start justify-between mb-5">
                 <h2 className="text-xl font-black text-zinc-950">Nastavenia súborov cookie</h2>
                 <button
-                  onClick={() => setModalOpen(false)}
+                  onClick={() => {
+                    setModalOpen(false)
+                    if (!localStorage.getItem(STORAGE_KEY)) setBannerVisible(true)
+                  }}
                   className="ml-4 text-zinc-400 hover:text-zinc-700 transition-colors"
                   aria-label="Zavrieť"
                 >
