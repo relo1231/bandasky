@@ -204,16 +204,28 @@ export default async function HomePage() {
             <div className="hidden lg:flex items-center justify-center">
               <div className="animate-float w-full max-w-sm">
                 {/* Main card */}
-                <div className="relative rounded-2xl bg-white p-6 shadow-2xl">
-                  {/* Badge — vnútri karty, vpravo hore */}
-                  <div className="absolute -right-3 -top-3 flex h-14 w-14 items-center justify-center rounded-xl bg-amber-400 shadow-lg">
-                    <div className="text-center leading-tight">
-                      <p className="font-heading text-xs font-bold text-white">48h</p>
-                      <p className="font-heading text-[8px] font-bold text-white/80">DOPRAVA</p>
+                <div className="relative overflow-hidden rounded-2xl bg-white shadow-2xl">
+                  {/* IBC tank photo */}
+                  <div className="relative h-44 w-full overflow-hidden bg-slate-100">
+                    <Image
+                      src="https://source.unsplash.com/EaitBYPYh4Y/600x350"
+                      alt="IBC nádrže"
+                      fill
+                      className="object-cover"
+                      sizes="400px"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+                    {/* Badge nad fotkou */}
+                    <div className="absolute right-3 top-3 flex h-12 w-12 items-center justify-center rounded-xl bg-amber-400 shadow-lg">
+                      <div className="text-center leading-tight">
+                        <p className="font-heading text-xs font-bold text-white">48h</p>
+                        <p className="font-heading text-[8px] font-bold text-white/80">DOPRAVA</p>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="mb-5 flex items-center justify-between pr-8">
+                  <div className="p-6">
+                  <div className="mb-5 flex items-center justify-between">
                     <div>
                       <p className="text-xs font-medium text-slate-400">Najpredávanejší produkt</p>
                       <p className="font-heading text-lg font-bold uppercase tracking-wide text-slate-900">IBC 1000L Nová</p>
@@ -244,6 +256,7 @@ export default async function HomePage() {
                       Zobraziť
                     </Link>
                   </div>
+                  </div>{/* koniec p-6 */}
                 </div>
 
                 {/* Mini karta — pod hlavnou, nie prekrývajúca */}
@@ -339,7 +352,7 @@ export default async function HomePage() {
       {/* ─── HERO IMAGE SECTION ─── */}
       <section className="relative h-[420px] overflow-hidden">
         <Image
-          src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1920&q=80"
+          src="https://source.unsplash.com/EaitBYPYh4Y/1920x600"
           alt="IBC nádrže sklad"
           fill
           className="object-cover"

@@ -86,14 +86,13 @@ export default async function ProduktDetailPage({ params }: Props) {
                 priority
               />
             ) : (
-              <div className="flex h-full items-center justify-center">
-                <div className="text-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="mx-auto h-20 w-20 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                  </svg>
-                  <p className="mt-3 font-heading text-sm uppercase tracking-widest text-slate-400">1000 litrov</p>
-                </div>
-              </div>
+              <Image
+                src="https://source.unsplash.com/EaitBYPYh4Y/800x800"
+                alt="IBC nádrž"
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+              />
             )}
           </div>
 

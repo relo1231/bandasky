@@ -29,11 +29,13 @@ export function ProduktKarta({ produkt }: Props) {
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-14 w-14 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-              </svg>
-            </div>
+            <Image
+              src="https://source.unsplash.com/EaitBYPYh4Y/600x350"
+              alt="IBC nádrž"
+              fill
+              className="object-cover opacity-80"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
           )}
           {/* Status badge */}
           <div className={`absolute left-3 top-3 flex items-center gap-1.5 rounded-full ${dst.bg} px-2.5 py-1 shadow-sm`}>
