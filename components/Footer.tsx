@@ -7,9 +7,9 @@ export function Footer() {
   return (
     <footer className="mt-auto bg-slate-900 text-slate-400">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-4">
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-5">
 
-          <div className="md:col-span-2">
+          <div className="md:col-span-2 lg:col-span-2">
             <div className="flex items-center gap-2.5 mb-4">
               <div className="flex h-8 w-8 items-center justify-center bg-white">
                 <span className="font-heading text-xs font-bold text-slate-900">IBC</span>
@@ -40,6 +40,25 @@ export function Footer() {
                 { href: '/produkty?kategoria=nove-nadrze', label: 'Nové IBC nádrže' },
                 { href: '/produkty?kategoria=repasovane', label: 'Repasované nádrže' },
                 { href: '/produkty?kategoria=prislusenstvo', label: 'Príslušenstvo' },
+              ].map((link) => (
+                <li key={link.href}>
+                  <Link href={link.href} className="text-sm text-slate-400 transition-colors hover:text-white">
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <p className="mb-5 font-heading text-xs font-semibold uppercase tracking-[0.2em] text-slate-300">
+              Právne
+            </p>
+            <ul className="space-y-3">
+              {[
+                { href: '/obchodne-podmienky', label: 'Obchodné podmienky' },
+                { href: '/reklamacny-poriadok', label: 'Reklamačný poriadok' },
+                { href: '/ochrana-osobnych-udajov', label: 'Ochrana osobných údajov' },
               ].map((link) => (
                 <li key={link.href}>
                   <Link href={link.href} className="text-sm text-slate-400 transition-colors hover:text-white">
@@ -85,9 +104,6 @@ export function Footer() {
         <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-slate-800 pt-6 sm:flex-row">
           <p className="text-xs text-slate-600">© {year} Bandasky. Všetky práva vyhradené.</p>
           <div className="flex flex-wrap items-center gap-4">
-            <Link href="/ochrana-osobnych-udajov" className="text-xs text-slate-600 transition-colors hover:text-white">
-              Ochrana osobných údajov
-            </Link>
             <CookieSettingsButton />
             <Link href="/kosik" className="text-xs text-slate-600 transition-colors hover:text-white">
               Poslať dopyt →
