@@ -4,6 +4,8 @@ import './globals.css'
 import { KosikProvider } from '@/components/KosikProvider'
 import { Navbar } from '@/components/Navbar'
 import { Footer } from '@/components/Footer'
+import { FloatingContact } from '@/components/FloatingContact'
+import { CookieBanner } from '@/components/CookieBanner'
 
 const oswald = Oswald({
   variable: '--font-oswald',
@@ -29,14 +31,37 @@ export const metadata: Metadata = {
   },
 }
 
+const organizationJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Bandasky',
+  url: 'https://bandasky.sk',
+  logo: 'https://bandasky.sk/favicon.ico',
+  contactPoint: {
+    '@type': 'ContactPoint',
+    telephone: '+421-900-000-000',
+    contactType: 'customer service',
+    availableLanguage: 'Slovak',
+  },
+  sameAs: [],
+}
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="sk" className={`${oswald.variable} ${dmSans.variable} h-full antialiased`}>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        />
+      </head>
       <body className="flex min-h-full flex-col bg-white text-slate-900">
         <KosikProvider>
           <Navbar />
           <main className="flex-1">{children}</main>
           <Footer />
+          <FloatingContact />
+          <CookieBanner />
         </KosikProvider>
       </body>
     </html>

@@ -13,6 +13,7 @@ export function Navbar() {
   const navLinks = [
     { href: '/', label: 'Domov' },
     { href: '/produkty', label: 'Nádrže' },
+    { href: '/kontakt', label: 'Kontakt' },
   ]
 
   return (

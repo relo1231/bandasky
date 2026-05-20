@@ -497,6 +497,105 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* ─── RECENZIE ─── */}
+      <section className="bg-slate-50 py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-12 text-center">
+            <p className="font-heading text-xs font-semibold uppercase tracking-[0.3em] text-emerald-600">Recenzie</p>
+            <h2 className="mt-3 font-heading text-4xl font-bold uppercase tracking-wide text-slate-900 sm:text-5xl">
+              Čo hovoria zákazníci
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+            {[
+              {
+                meno: 'Marek Novák',
+                firma: 'Farma Novák, s.r.o.',
+                text: 'Objednali sme 5 repasovaných nádrží. Dorazili čisté, v perfektnom stave. Komunikácia bezproblémová, dodanie do 2 dní. Odporúčam.',
+                hviezdy: 5,
+              },
+              {
+                meno: 'Jana Kováčová',
+                firma: 'Záhradné centrum Bratislava',
+                text: 'Potrebovala som nádrže na zavlažovanie. Poradili mi správny typ, cena bola férová. Určite sa vrátim pri ďalšej objednávke.',
+                hviezdy: 5,
+              },
+              {
+                meno: 'Peter Blaho',
+                firma: 'Blaho Logistics',
+                text: 'Výborná spolupráca. Rýchle doručenie, nádrže v poriadku. Cena zodpovedá kvalite. Odporúčam každému, kto potrebuje IBC kontajnery.',
+                hviezdy: 5,
+              },
+            ].map((r) => (
+              <div key={r.meno} className="flex flex-col rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                <div className="flex gap-1 mb-4">
+                  {Array.from({ length: r.hviezdy }).map((_, i) => (
+                    <svg key={i} xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-amber-400" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
+                </div>
+                <p className="flex-1 text-sm leading-relaxed text-slate-600 italic">&ldquo;{r.text}&rdquo;</p>
+                <div className="mt-5 border-t border-slate-100 pt-4">
+                  <p className="font-heading text-sm font-bold text-slate-900">{r.meno}</p>
+                  <p className="text-xs text-slate-400">{r.firma}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── FAQ ─── */}
+      <section className="bg-white py-20">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-12 text-center">
+            <p className="font-heading text-xs font-semibold uppercase tracking-[0.3em] text-emerald-600">Otázky</p>
+            <h2 className="mt-3 font-heading text-4xl font-bold uppercase tracking-wide text-slate-900 sm:text-5xl">
+              Časté otázky
+            </h2>
+          </div>
+          <div className="divide-y divide-slate-100">
+            {[
+              {
+                q: 'Čo je repasovaná IBC nádrž?',
+                a: 'Repasovaná nádrž je použitá IBC nádoba, ktorá prešla dôkladným čistením, kontrolou tesnení a vizuálnou inšpekciou. Je vhodná na skladovanie vody, hnojív a iných kvapalín — za zlomok ceny novej nádrže.',
+              },
+              {
+                q: 'Sú nádrže vhodné na pitnú vodu?',
+                a: 'Závisí od predchádzajúceho obsahu nádrže. Nádrže označené ako "food grade" (pôvodne obsahovali potravinárske látky) sú vhodné na pitnú vodu. Vždy to upresníme pri objednávke.',
+              },
+              {
+                q: 'Ako dlho trvá doručenie?',
+                a: 'Štandardne doručíme do 48 hodín po celom Slovensku. Pri väčších objednávkach alebo vzdialených lokalitách vás vopred informujeme o presnom termíne.',
+              },
+              {
+                q: 'Aký je objem IBC nádrží?',
+                a: 'Štandardný objem je 1 000 litrov. Pracujeme výhradne s 1000L kontajnermi, ktoré sú najpopulárnejším formátom pre B2B použitie.',
+              },
+              {
+                q: 'Môžem si nádrže osobne vyzdvihnúť?',
+                a: 'Áno, osobný odber je možný po telefonickom dohodnutí termínu. Kontaktujte nás a dohodneme čas.',
+              },
+              {
+                q: 'Robíte faktúry pre firmy?',
+                a: 'Samozrejme — sme platcovia DPH a vystavujeme faktúry pre právnické aj fyzické osoby. Stačí uviesť IČO pri objednávke.',
+              },
+            ].map((item) => (
+              <details key={item.q} className="group py-5">
+                <summary className="flex cursor-pointer items-center justify-between gap-4 font-heading text-sm font-bold uppercase tracking-wide text-slate-900 hover:text-emerald-600 transition-colors list-none">
+                  {item.q}
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 shrink-0 text-slate-400 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </summary>
+                <p className="mt-3 text-sm leading-relaxed text-slate-500">{item.a}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ─── CTA ─── */}
       <section className="relative overflow-hidden bg-gradient-to-br from-emerald-700 to-teal-800 py-24">
         <div className="absolute inset-0 opacity-10"

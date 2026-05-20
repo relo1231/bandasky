@@ -61,8 +61,30 @@ export default async function ProduktDetailPage({ params }: Props) {
     bg: 'bg-slate-50 border-slate-200',
   }
 
+  const productJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: produkt.nazov,
+    description: produkt.kratky_popis ?? produkt.popis ?? undefined,
+    image: produkt.obrazok_url ?? undefined,
+    offers: produkt.cena_od != null ? {
+      '@type': 'Offer',
+      priceCurrency: 'EUR',
+      price: produkt.cena_od,
+      availability: produkt.dostupnost === 'Na sklade'
+        ? 'https://schema.org/InStock'
+        : 'https://schema.org/OutOfStock',
+      seller: { '@type': 'Organization', name: 'Bandasky' },
+    } : undefined,
+  }
+
   return (
-    <div className="min-h-screen bg-white">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+      />
+      <div className="min-h-screen bg-white">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
         <nav className="mb-10 flex items-center gap-2 text-sm text-slate-400">
@@ -158,5 +180,6 @@ export default async function ProduktDetailPage({ params }: Props) {
         )}
       </div>
     </div>
+    </>
   )
 }
