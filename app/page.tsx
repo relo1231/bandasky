@@ -20,12 +20,33 @@ async function getFeaturedProdukty(): Promise<Produkt[]> {
   return data ?? []
 }
 
-const stats = [
-  { hodnota: '500+', popis: 'Dodaných nádrží', sub: 'každý rok' },
-  { hodnota: '10', popis: 'Rokov skúseností', sub: 'na trhu' },
-  { hodnota: '48h', popis: 'Doprava po SR', sub: 'zaručene' },
-  { hodnota: '100%', popis: 'Certifikované', sub: 'pre pitnú vodu' },
-]
+type Stats = {
+  produktovSkladom: number
+  vybavenychDopytov: number
+  rokovNaTrhu: number
+}
+
+async function getStats(): Promise<Stats> {
+  const [{ count: produktovSkladom }, { count: vybavenychDopytov }] = await Promise.all([
+    supabase
+      .from('produkty')
+      .select('*', { count: 'exact', head: true })
+      .eq('aktivny', true)
+      .eq('dostupnost', 'Na sklade'),
+    supabase
+      .from('dopyty')
+      .select('*', { count: 'exact', head: true })
+      .eq('stav', 'vybavený'),
+  ])
+
+  const rokovNaTrhu = new Date().getFullYear() - 2014
+
+  return {
+    produktovSkladom: produktovSkladom ?? 0,
+    vybavenychDopytov: vybavenychDopytov ?? 0,
+    rokovNaTrhu,
+  }
+}
 
 const kategorie = [
   {
@@ -103,7 +124,17 @@ const kroky = [
 ]
 
 export default async function HomePage() {
-  const featuredProdukty = await getFeaturedProdukty()
+  const [featuredProdukty, stats] = await Promise.all([
+    getFeaturedProdukty(),
+    getStats(),
+  ])
+
+  const dynamicStats = [
+    { hodnota: stats.produktovSkladom.toString(), popis: 'Produktov skladom', sub: 'aktuálne dostupné' },
+    { hodnota: `${stats.rokovNaTrhu}+`, popis: 'Rokov skúseností', sub: 'na trhu od 2014' },
+    { hodnota: '48h', popis: 'Doprava po SR', sub: 'zaručene' },
+    { hodnota: stats.vybavenychDopytov > 0 ? `${stats.vybavenychDopytov}+` : '—', popis: 'Vybavených dopytu', sub: 'spokojných zákazníkov' },
+  ]
 
   return (
     <>
@@ -237,7 +268,7 @@ export default async function HomePage() {
       <section className="bg-white py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 gap-8 lg:grid-cols-4">
-            {stats.map((s) => (
+            {dynamicStats.map((s) => (
               <div key={s.popis} className="text-center">
                 <p className="font-heading text-4xl font-bold text-emerald-600">{s.hodnota}</p>
                 <p className="mt-1 font-semibold text-slate-800">{s.popis}</p>
