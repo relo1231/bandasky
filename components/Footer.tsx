@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { CookieSettingsButton } from './CookieSettingsButton'
 
 export function Footer() {
   const year = new Date().getFullYear()
@@ -83,9 +84,15 @@ export function Footer() {
 
         <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-slate-800 pt-6 sm:flex-row">
           <p className="text-xs text-slate-600">© {year} Bandasky. Všetky práva vyhradené.</p>
-          <Link href="/kosik" className="text-xs text-slate-600 transition-colors hover:text-white">
-            Poslať dopyt →
-          </Link>
+          <div className="flex flex-wrap items-center gap-4">
+            <Link href="/ochrana-osobnych-udajov" className="text-xs text-slate-600 transition-colors hover:text-white">
+              Ochrana osobných údajov
+            </Link>
+            <CookieSettingsButton />
+            <Link href="/kosik" className="text-xs text-slate-600 transition-colors hover:text-white">
+              Poslať dopyt →
+            </Link>
+          </div>
         </div>
       </div>
     </footer>
