@@ -6,16 +6,25 @@ import type { Produkt } from '@/types'
 import { ProduktKarta } from '@/components/ProduktKarta'
 
 export const metadata: Metadata = {
-  title: 'Bandasky – 1000L IBC nádrže na vodu',
-  description: 'Nové a repasované 1000L IBC nádrže na vodu. Certifikované pre pitnú vodu. Rýchla doprava po SR.',
+  title: 'Bandasky – Repasované IBC nádrže na vodu',
+  description: 'Repasované 1000L IBC nádrže na vodu. Vyčistené, preverené, skladom. Rýchla doprava po SR.',
 }
 
-async function getFeaturedProdukty(): Promise<Produkt[]> {
+async function getFeaturedRepasovane(): Promise<Produkt[]> {
+  const { data: kat } = await supabase
+    .from('kategorie')
+    .select('id')
+    .eq('slug', 'repasovane')
+    .single()
+
+  if (!kat) return []
+
   const { data } = await supabase
     .from('produkty')
     .select('*, kategorie(*)')
     .eq('aktivny', true)
-    .order('zoradenie', { ascending: false })
+    .eq('kategoria_id', kat.id)
+    .order('cena_od', { ascending: false })
     .limit(3)
   return data ?? []
 }
@@ -24,10 +33,22 @@ type Stats = {
   produktovSkladom: number
   vybavenychDopytov: number
   rokovNaTrhu: number
+  maxCenaRepasovane: number | null
+  minCenaRepasovane: number | null
 }
 
 async function getStats(): Promise<Stats> {
-  const [{ count: produktovSkladom }, { count: vybavenychDopytov }] = await Promise.all([
+  const { data: katRep } = await supabase
+    .from('kategorie')
+    .select('id')
+    .eq('slug', 'repasovane')
+    .single()
+
+  const [
+    { count: produktovSkladom },
+    { count: vybavenychDopytov },
+    { data: cenyRep },
+  ] = await Promise.all([
     supabase
       .from('produkty')
       .select('*', { count: 'exact', head: true })
@@ -37,38 +58,35 @@ async function getStats(): Promise<Stats> {
       .from('dopyty')
       .select('*', { count: 'exact', head: true })
       .eq('stav', 'vybavený'),
+    katRep
+      ? supabase
+          .from('produkty')
+          .select('cena_od')
+          .eq('aktivny', true)
+          .eq('kategoria_id', katRep.id)
+          .not('cena_od', 'is', null)
+          .order('cena_od', { ascending: false })
+      : Promise.resolve({ data: [] }),
   ])
 
+  const ceny = (cenyRep ?? []).map((p) => p.cena_od as number)
   const rokovNaTrhu = new Date().getFullYear() - 2014
 
   return {
     produktovSkladom: produktovSkladom ?? 0,
     vybavenychDopytov: vybavenychDopytov ?? 0,
     rokovNaTrhu,
+    maxCenaRepasovane: ceny.length > 0 ? Math.max(...ceny) : null,
+    minCenaRepasovane: ceny.length > 0 ? Math.min(...ceny) : null,
   }
 }
 
 const kategorie = [
   {
-    href: '/produkty?kategoria=nove-nadrze',
-    nazov: 'Nové IBC nádrže',
-    popis: 'Značkové 1000L kontajnery s certifikátom pre pitnú vodu. Plná záruka.',
-    cena: 'od 89 €',
-    gradient: 'from-blue-600 to-blue-800',
-    lightBg: 'bg-blue-50',
-    lightText: 'text-blue-600',
-    badge: 'Najpredávanejšie',
-    icon: (
-      <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-      </svg>
-    ),
-  },
-  {
     href: '/produkty?kategoria=repasovane',
     nazov: 'Repasované nádrže',
     popis: 'Vyčistené a preverené IBC nádrže. Ekologická a ekonomická voľba.',
-    cena: 'od 39 €',
+    cena: 'DYNAMIC_REPASOVANE',
     gradient: 'from-emerald-600 to-teal-700',
     lightBg: 'bg-emerald-50',
     lightText: 'text-emerald-600',
@@ -100,7 +118,7 @@ const kroky = [
   {
     cislo: '01',
     nazov: 'Vyberte nádrž',
-    popis: 'Prezrite si náš katalóg nových a repasovaných IBC nádrží. Filtrujte podľa kategórie.',
+    popis: 'Prezrite si náš katalóg repasovaných IBC nádrží a príslušenstva. Filtrujte podľa kategórie.',
     color: 'text-emerald-600',
     bgColor: 'bg-emerald-50',
     borderColor: 'border-emerald-200',
@@ -125,7 +143,7 @@ const kroky = [
 
 export default async function HomePage() {
   const [featuredProdukty, stats] = await Promise.all([
-    getFeaturedProdukty(),
+    getFeaturedRepasovane(),
     getStats(),
   ])
 
@@ -166,7 +184,7 @@ export default async function HomePage() {
               </h1>
 
               <p className="mt-6 max-w-md text-lg leading-relaxed text-white/70">
-                Nové aj repasované 1000L IBC kontajnery. Certifikované pre pitnú vodu. Rýchla doprava po celom Slovensku priamo k vám.
+                Repasované 1000L IBC kontajnery. Vyčistené, preverené a pripravené na okamžité použitie. Rýchla doprava po celom Slovensku.
               </p>
 
               <div className="mt-8 flex flex-wrap gap-3">
@@ -227,10 +245,10 @@ export default async function HomePage() {
                   <div className="p-6">
                   <div className="mb-5 flex items-center justify-between">
                     <div>
-                      <p className="text-xs font-medium text-slate-400">Najpredávanejší produkt</p>
-                      <p className="font-heading text-lg font-bold uppercase tracking-wide text-slate-900">IBC 1000L Nová</p>
+                      <p className="text-xs font-medium text-slate-400">Repasovaná nádrž</p>
+                      <p className="font-heading text-lg font-bold uppercase tracking-wide text-slate-900">IBC 1000L Repasovaná</p>
                     </div>
-                    <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">Na sklade</span>
+                    <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">Skladom</span>
                   </div>
 
                   <div className="space-y-2">
@@ -238,7 +256,7 @@ export default async function HomePage() {
                       { label: 'Objem', value: '1 000 L' },
                       { label: 'Materiál', value: 'HDPE + oceľ' },
                       { label: 'Nosnosť', value: '1 250 kg' },
-                      { label: 'Certifikát', value: 'Pitná voda' },
+                      { label: 'Stav', value: 'Vyčistená' },
                     ].map((row) => (
                       <div key={row.label} className="flex items-center justify-between rounded-lg bg-slate-50 px-4 py-2.5">
                         <span className="text-sm text-slate-500">{row.label}</span>
@@ -249,21 +267,29 @@ export default async function HomePage() {
 
                   <div className="mt-5 flex items-center justify-between border-t border-slate-100 pt-5">
                     <div>
-                      <p className="text-xs text-slate-400">Nová — cena od</p>
-                      <p className="font-heading text-3xl font-bold text-emerald-600">89 €</p>
+                      <p className="text-xs text-slate-400">Cena od</p>
+                      <p className="font-heading text-3xl font-bold text-emerald-600">
+                        {stats.minCenaRepasovane != null
+                          ? `${stats.minCenaRepasovane.toLocaleString('sk-SK')} €`
+                          : 'Na dopyt'}
+                      </p>
                     </div>
-                    <Link href="/produkty" className="rounded-xl bg-emerald-600 px-5 py-2.5 font-heading text-sm font-bold uppercase tracking-widest text-white transition-colors hover:bg-emerald-700">
+                    <Link href="/produkty?kategoria=repasovane" className="rounded-xl bg-emerald-600 px-5 py-2.5 font-heading text-sm font-bold uppercase tracking-widest text-white transition-colors hover:bg-emerald-700">
                       Zobraziť
                     </Link>
                   </div>
                   </div>{/* koniec p-6 */}
                 </div>
 
-                {/* Mini karta — pod hlavnou, nie prekrývajúca */}
+                {/* Mini karta — najdrahšia repasovaná */}
                 <div className="mt-3 flex items-center justify-between rounded-xl border border-white/20 bg-white/10 px-5 py-3 backdrop-blur-sm">
                   <div>
-                    <p className="text-xs text-white/60">Repasované nádrže</p>
-                    <p className="font-heading text-lg font-bold text-white">od 39 €</p>
+                    <p className="text-xs text-white/60">Najdrahšia repasovaná</p>
+                    <p className="font-heading text-lg font-bold text-white">
+                      {stats.maxCenaRepasovane != null
+                        ? `${stats.maxCenaRepasovane.toLocaleString('sk-SK')} €`
+                        : '—'}
+                    </p>
                   </div>
                   <Link href="/produkty?kategoria=repasovane" className="rounded-lg border border-white/30 px-4 py-1.5 font-heading text-xs font-bold uppercase tracking-widest text-white transition-all hover:bg-white/10">
                     Zobraziť
@@ -335,7 +361,13 @@ export default async function HomePage() {
                 <div className="flex items-center justify-between bg-white px-7 py-5">
                   <div>
                     <p className="text-xs text-slate-400">Cena od</p>
-                    <p className={`font-heading text-2xl font-bold ${kat.lightText}`}>{kat.cena}</p>
+                    <p className={`font-heading text-2xl font-bold ${kat.lightText}`}>
+                      {kat.cena === 'DYNAMIC_REPASOVANE'
+                        ? stats.minCenaRepasovane != null
+                          ? `${stats.minCenaRepasovane.toLocaleString('sk-SK')} €`
+                          : 'Na dopyt'
+                        : kat.cena}
+                    </p>
                   </div>
                   <div className={`flex h-10 w-10 items-center justify-center rounded-full ${kat.lightBg} transition-all group-hover:scale-110`}>
                     <svg xmlns="http://www.w3.org/2000/svg" className={`h-5 w-5 ${kat.lightText}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -419,9 +451,9 @@ export default async function HomePage() {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mb-12 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
               <div>
-                <p className="font-heading text-xs font-semibold uppercase tracking-[0.3em] text-emerald-600">Aktuálna ponuka</p>
+                <p className="font-heading text-xs font-semibold uppercase tracking-[0.3em] text-emerald-600">Repasované nádrže</p>
                 <h2 className="mt-3 font-heading text-4xl font-bold uppercase tracking-wide text-slate-900 sm:text-5xl">
-                  Skladom
+                  Skladom — od najvyššej ceny
                 </h2>
               </div>
               <Link
