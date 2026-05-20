@@ -22,13 +22,13 @@ export function KosikButton({ polozka, className }: Props) {
   return (
     <button
       onClick={handleClick}
-      className={`px-4 py-2 font-heading font-semibold uppercase tracking-wide text-sm transition-all ${
+      className={`rounded-md px-4 py-2 font-heading font-semibold uppercase tracking-wide text-sm transition-all ${
         pridany
-          ? 'bg-green-700 text-white'
-          : 'bg-[#1e6fff] text-white hover:bg-[#1458d6]'
+          ? 'bg-emerald-600 text-white'
+          : 'bg-slate-900 text-white hover:bg-slate-700'
       } ${className ?? ''}`}
     >
-      {pridany ? '✓ Pridané' : 'Pridať do dopytu'}
+      {pridany ? '✓ Pridané' : 'Do dopytu'}
     </button>
   )
 }
