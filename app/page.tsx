@@ -332,7 +332,7 @@ export default async function HomePage() {
               Čo hľadáte?
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-slate-500">
-              Tri kategórie pre každú potrebu — od nových certifikovaných nádrží až po ekonomické repasované riešenia.
+              Repasované IBC nádrže a príslušenstvo skladom. Vyčistené, preverené, pripravené na okamžité použitie.
             </p>
           </div>
 
