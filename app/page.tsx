@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import type { Produkt } from '@/types'
@@ -6,7 +7,7 @@ import { ProduktKarta } from '@/components/ProduktKarta'
 
 export const metadata: Metadata = {
   title: 'Bandasky – 1000L IBC nádrže na vodu',
-  description: 'Nové a repasované 1000L IBC nádrže na vodu. Rýchla doprava po SR.',
+  description: 'Nové a repasované 1000L IBC nádrže na vodu. Certifikované pre pitnú vodu. Rýchla doprava po SR.',
 }
 
 async function getFeaturedProdukty(): Promise<Produkt[]> {
@@ -20,72 +21,84 @@ async function getFeaturedProdukty(): Promise<Produkt[]> {
 }
 
 const stats = [
-  { hodnota: '500+', popis: 'Dodaných nádrží ročne' },
-  { hodnota: '10', popis: 'Rokov na trhu' },
-  { hodnota: '48h', popis: 'Doprava po SR' },
-  { hodnota: '100%', popis: 'Certifikované' },
-]
-
-const vyhody = [
-  {
-    nazov: 'Certifikované pre pitnú vodu',
-    popis: 'Všetky nádrže spĺňajú normy pre skladovanie pitnej aj úžitkovej vody.',
-    icon: (
-      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-      </svg>
-    ),
-  },
-  {
-    nazov: 'Oceľová ochranná klietka',
-    popis: 'Robustná galvanizovaná klietka chráni plastový kontajner. Stohovateľné 2-vrstvovo.',
-    icon: (
-      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-      </svg>
-    ),
-  },
-  {
-    nazov: 'Záručný servis',
-    popis: 'Záruka na nové nádrže a poradenstvo pri výbere. Sme tu pre vás aj po kúpe.',
-    icon: (
-      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
-      </svg>
-    ),
-  },
-  {
-    nazov: 'Dodávka kamkoľvek',
-    popis: 'Rozvozy po celom Slovensku. Dovezieme priamo na vašu adresu do 48 hodín.',
-    icon: (
-      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" />
-      </svg>
-    ),
-  },
+  { hodnota: '500+', popis: 'Dodaných nádrží', sub: 'každý rok' },
+  { hodnota: '10', popis: 'Rokov skúseností', sub: 'na trhu' },
+  { hodnota: '48h', popis: 'Doprava po SR', sub: 'zaručene' },
+  { hodnota: '100%', popis: 'Certifikované', sub: 'pre pitnú vodu' },
 ]
 
 const kategorie = [
   {
     href: '/produkty?kategoria=nove-nadrze',
     nazov: 'Nové IBC nádrže',
-    popis: 'Značkové 1000L IBC kontajnery. Certifikované, záručné, vhodné na pitnú vodu.',
+    popis: 'Značkové 1000L kontajnery s certifikátom pre pitnú vodu. Plná záruka.',
     cena: 'od 89 €',
+    gradient: 'from-blue-600 to-blue-800',
+    lightBg: 'bg-blue-50',
+    lightText: 'text-blue-600',
     badge: 'Najpredávanejšie',
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+      </svg>
+    ),
   },
   {
     href: '/produkty?kategoria=repasovane',
     nazov: 'Repasované nádrže',
-    popis: 'Vyčistené a preverené 1000L IBC nádrže za výhodnú cenu. Ekologická voľba.',
+    popis: 'Vyčistené a preverené IBC nádrže. Ekologická a ekonomická voľba.',
     cena: 'od 39 €',
+    gradient: 'from-emerald-600 to-teal-700',
+    lightBg: 'bg-emerald-50',
+    lightText: 'text-emerald-600',
     badge: 'Najlepšia cena',
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+      </svg>
+    ),
   },
   {
     href: '/produkty?kategoria=prislusenstvo',
     nazov: 'Príslušenstvo',
     popis: 'Kohúty, adaptéry, čerpadlá, víka a náhradné diely pre IBC nádrže.',
     cena: 'od 3 €',
+    gradient: 'from-amber-500 to-orange-600',
+    lightBg: 'bg-amber-50',
+    lightText: 'text-amber-600',
     badge: null,
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z" />
+      </svg>
+    ),
+  },
+]
+
+const kroky = [
+  {
+    cislo: '01',
+    nazov: 'Vyberte nádrž',
+    popis: 'Prezrite si náš katalóg nových a repasovaných IBC nádrží. Filtrujte podľa kategórie.',
+    color: 'text-emerald-600',
+    bgColor: 'bg-emerald-50',
+    borderColor: 'border-emerald-200',
+  },
+  {
+    cislo: '02',
+    nazov: 'Pošlite dopyt',
+    popis: 'Pridajte produkty do dopytu a vyplňte kontaktný formulár. Trvá to menej ako 2 minúty.',
+    color: 'text-blue-600',
+    bgColor: 'bg-blue-50',
+    borderColor: 'border-blue-200',
+  },
+  {
+    cislo: '03',
+    nazov: 'Doručíme k vám',
+    popis: 'Ozveme sa do 24 hodín s ponukou a doručíme nádrže priamo k vám — celé Slovensko.',
+    color: 'text-amber-600',
+    bgColor: 'bg-amber-50',
+    borderColor: 'border-amber-200',
   },
 ]
 
@@ -95,117 +108,140 @@ export default async function HomePage() {
   return (
     <>
       {/* ─── HERO ─── */}
-      <section className="border-b border-slate-100 bg-white">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid min-h-[calc(100vh-5.25rem)] grid-cols-1 items-center gap-12 py-20 lg:grid-cols-2">
-            {/* Left */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-emerald-700 via-emerald-600 to-teal-700">
+        {/* Background pattern */}
+        <div className="absolute inset-0 opacity-10"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          }}
+        />
+        {/* Subtle radial glow */}
+        <div className="absolute top-0 right-0 h-[600px] w-[600px] -translate-y-1/4 translate-x-1/4 rounded-full bg-white opacity-[0.04] blur-[100px]" />
+        <div className="absolute bottom-0 left-0 h-[400px] w-[400px] translate-y-1/4 -translate-x-1/4 rounded-full bg-teal-300 opacity-[0.08] blur-[80px]" />
+
+        <div className="relative mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8 lg:py-32">
+          <div className="grid grid-cols-1 items-center gap-14 lg:grid-cols-2">
+            {/* Left: text */}
             <div>
-              <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                <span className="text-xs font-medium text-slate-600">Skladom · Doprava do 48h</span>
+              <div className="mb-6 inline-flex items-center gap-2.5 rounded-full border border-white/20 bg-white/10 px-4 py-2 backdrop-blur-sm">
+                <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-300" />
+                <span className="text-sm font-medium text-white/90">Skladom · Celé Slovensko · Doprava 48h</span>
               </div>
 
-              <h1 className="font-heading text-5xl font-bold uppercase leading-[1.1] tracking-tight text-slate-900 sm:text-6xl lg:text-7xl">
-                1000L IBC<br />
-                <span className="text-slate-400">nádrže</span><br />
-                na vodu
+              <h1 className="font-heading text-5xl font-bold uppercase leading-[1.08] tracking-tight text-white sm:text-6xl lg:text-7xl">
+                IBC nádrže<br />
+                <span className="text-emerald-200">na vodu</span><br />
+                skladom
               </h1>
 
-              <p className="mt-6 max-w-lg text-base leading-relaxed text-slate-500">
-                Nové aj repasované IBC nádrže skladom. Certifikované pre pitnú vodu. Rýchla doprava po celom Slovensku — priamo k vám.
+              <p className="mt-6 max-w-md text-lg leading-relaxed text-white/70">
+                Nové aj repasované 1000L IBC kontajnery. Certifikované pre pitnú vodu. Rýchla doprava po celom Slovensku priamo k vám.
               </p>
 
-              <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+              <div className="mt-8 flex flex-wrap gap-3">
                 <Link
                   href="/produkty"
-                  className="inline-flex items-center justify-center gap-2 rounded-md bg-slate-900 px-8 py-3.5 font-heading text-sm font-bold uppercase tracking-widest text-white transition-colors hover:bg-slate-700"
+                  className="inline-flex items-center gap-2 rounded-xl bg-white px-7 py-3.5 font-heading text-sm font-bold uppercase tracking-widest text-emerald-700 shadow-lg transition-all hover:bg-emerald-50 hover:shadow-xl"
                 >
                   Pozrieť nádrže
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
                 </Link>
                 <Link
                   href="/kosik"
-                  className="inline-flex items-center justify-center gap-2 rounded-md border border-slate-200 px-8 py-3.5 font-heading text-sm font-bold uppercase tracking-widest text-slate-600 transition-all hover:border-slate-900 hover:text-slate-900"
+                  className="inline-flex items-center gap-2 rounded-xl border-2 border-white/30 px-7 py-3.5 font-heading text-sm font-bold uppercase tracking-widest text-white backdrop-blur-sm transition-all hover:border-white/60 hover:bg-white/10"
                 >
                   Nezáväzný dopyt
                 </Link>
               </div>
 
-              {/* Trust signals */}
-              <div className="mt-10 flex flex-wrap gap-x-6 gap-y-2 text-sm text-slate-400">
-                <span className="flex items-center gap-1.5">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                  </svg>
-                  Bez záväzku
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                  </svg>
-                  Odpoveď do 24h
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                  </svg>
-                  Celé Slovensko
-                </span>
+              {/* Social proof */}
+              <div className="mt-10 flex flex-wrap gap-x-6 gap-y-2">
+                {['Bez záväzku', 'Odpoveď do 24h', 'Overená kvalita'].map((item) => (
+                  <span key={item} className="flex items-center gap-2 text-sm text-white/70">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-emerald-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                    {item}
+                  </span>
+                ))}
               </div>
             </div>
 
-            {/* Right: Specs card */}
-            <div className="hidden lg:block">
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-8">
-                <div className="mb-6 flex items-center justify-between">
-                  <div>
-                    <p className="font-heading text-xs font-semibold uppercase tracking-widest text-slate-400">Cena od</p>
-                    <p className="font-heading text-4xl font-bold text-slate-900">39 €</p>
-                  </div>
-                  <div className="rounded-xl bg-white px-4 py-2 shadow-sm border border-slate-200">
-                    <p className="font-heading text-xs uppercase tracking-widest text-slate-400">Objem</p>
-                    <p className="font-heading text-2xl font-bold text-slate-900">1000 L</p>
-                  </div>
-                </div>
-
-                <div className="space-y-3">
-                  {[
-                    { label: 'Typ', value: 'IBC kontajner' },
-                    { label: 'Materiál', value: 'HDPE + oceľ' },
-                    { label: 'Objem', value: '1000 litrov' },
-                    { label: 'Nosnosť', value: '1250 kg' },
-                    { label: 'Certifikát', value: 'Pitná voda' },
-                    { label: 'Doprava', value: 'do 48 hodín' },
-                  ].map((row) => (
-                    <div key={row.label} className="flex items-center justify-between rounded-lg bg-white px-4 py-3 border border-slate-100">
-                      <span className="text-sm text-slate-500">{row.label}</span>
-                      <span className="text-sm font-semibold text-slate-900">{row.value}</span>
+            {/* Right: floating card */}
+            <div className="hidden lg:flex items-center justify-center">
+              <div className="relative w-full max-w-sm animate-float">
+                {/* Main card */}
+                <div className="rounded-2xl bg-white p-6 shadow-2xl">
+                  <div className="mb-5 flex items-center justify-between">
+                    <div>
+                      <p className="text-xs font-medium text-slate-400">Najpredávanejší produkt</p>
+                      <p className="font-heading text-lg font-bold uppercase tracking-wide text-slate-900">IBC 1000L Nová</p>
                     </div>
-                  ))}
+                    <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">Na sklade</span>
+                  </div>
+
+                  <div className="space-y-2">
+                    {[
+                      { label: 'Objem', value: '1 000 L' },
+                      { label: 'Materiál', value: 'HDPE + oceľ' },
+                      { label: 'Nosnosť', value: '1 250 kg' },
+                      { label: 'Certifikát', value: 'Pitná voda' },
+                    ].map((row) => (
+                      <div key={row.label} className="flex items-center justify-between rounded-lg bg-slate-50 px-4 py-2.5">
+                        <span className="text-sm text-slate-500">{row.label}</span>
+                        <span className="text-sm font-semibold text-slate-900">{row.value}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="mt-5 flex items-center justify-between border-t border-slate-100 pt-5">
+                    <div>
+                      <p className="text-xs text-slate-400">Cena od</p>
+                      <p className="font-heading text-3xl font-bold text-emerald-600">89 €</p>
+                    </div>
+                    <Link href="/produkty" className="rounded-xl bg-emerald-600 px-5 py-2.5 font-heading text-sm font-bold uppercase tracking-widest text-white transition-colors hover:bg-emerald-700">
+                      Zobraziť
+                    </Link>
+                  </div>
                 </div>
 
-                <Link
-                  href="/produkty"
-                  className="mt-6 flex w-full items-center justify-center gap-2 rounded-lg bg-slate-900 py-3.5 font-heading text-sm font-bold uppercase tracking-widest text-white transition-colors hover:bg-slate-700"
-                >
-                  Zobraziť všetky nádrže
-                </Link>
+                {/* Floating badge */}
+                <div className="absolute -right-4 -top-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-400 shadow-lg">
+                  <div className="text-center">
+                    <p className="font-heading text-xs font-bold leading-none text-white">48h</p>
+                    <p className="font-heading text-[9px] font-bold leading-none text-white/80 mt-0.5">DOPRAVA</p>
+                  </div>
+                </div>
+
+                {/* Floating mini-card */}
+                <div className="absolute -left-6 -bottom-4 rounded-xl bg-white px-4 py-3 shadow-xl border border-slate-100">
+                  <p className="text-xs text-slate-400">Repasované</p>
+                  <p className="font-heading text-lg font-bold text-slate-900">od <span className="text-emerald-600">39 €</span></p>
+                </div>
               </div>
             </div>
           </div>
         </div>
+
+        {/* Wave divider */}
+        <div className="absolute bottom-0 left-0 right-0">
+          <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" className="h-[60px] w-full">
+            <path d="M0 60L60 50C120 40 240 20 360 15C480 10 600 20 720 28C840 36 960 40 1080 38C1200 36 1320 28 1380 24L1440 20V60H1380C1320 60 1200 60 1080 60C960 60 840 60 720 60C600 60 480 60 360 60C240 60 120 60 60 60H0Z" fill="white"/>
+          </svg>
+        </div>
       </section>
 
       {/* ─── STATS ─── */}
-      <section className="border-b border-slate-100 bg-slate-900">
+      <section className="bg-white py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 divide-x divide-slate-800 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-8 lg:grid-cols-4">
             {stats.map((s) => (
-              <div key={s.popis} className="px-8 py-10 text-center">
-                <p className="font-heading text-4xl font-bold text-white">{s.hodnota}</p>
-                <p className="mt-1 text-sm text-slate-400">{s.popis}</p>
+              <div key={s.popis} className="text-center">
+                <p className="font-heading text-4xl font-bold text-emerald-600">{s.hodnota}</p>
+                <p className="mt-1 font-semibold text-slate-800">{s.popis}</p>
+                <p className="text-xs text-slate-400">{s.sub}</p>
               </div>
             ))}
           </div>
@@ -213,44 +249,50 @@ export default async function HomePage() {
       </section>
 
       {/* ─── KATEGÓRIE ─── */}
-      <section className="border-b border-slate-100 bg-white py-20">
+      <section className="bg-slate-50 py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-12">
-            <p className="font-heading text-xs font-semibold uppercase tracking-[0.25em] text-slate-400">Ponuka</p>
-            <h2 className="mt-2 font-heading text-4xl font-bold uppercase tracking-wide text-slate-900">
-              Čo ponúkame
+          <div className="mb-12 text-center">
+            <p className="font-heading text-xs font-semibold uppercase tracking-[0.3em] text-emerald-600">Ponuka</p>
+            <h2 className="mt-3 font-heading text-4xl font-bold uppercase tracking-wide text-slate-900 sm:text-5xl">
+              Čo hľadáte?
             </h2>
+            <p className="mx-auto mt-4 max-w-xl text-slate-500">
+              Tri kategórie pre každú potrebu — od nových certifikovaných nádrží až po ekonomické repasované riešenia.
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
             {kategorie.map((kat) => (
               <Link
                 key={kat.href}
                 href={kat.href}
-                className="group relative flex flex-col rounded-xl border border-slate-200 bg-white p-8 transition-all hover:border-slate-900 hover:shadow-lg"
+                className="group relative flex flex-col overflow-hidden rounded-2xl shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
               >
-                {kat.badge && (
-                  <span className="absolute right-4 top-4 rounded-full bg-slate-900 px-3 py-1 text-xs font-semibold text-white">
-                    {kat.badge}
-                  </span>
-                )}
-                <div className="mb-6 flex h-10 w-10 items-center justify-center rounded-lg bg-slate-100 text-slate-600 group-hover:bg-slate-900 group-hover:text-white transition-colors">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                  </svg>
+                {/* Gradient header */}
+                <div className={`relative bg-gradient-to-br ${kat.gradient} p-7 text-white`}>
+                  {kat.badge && (
+                    <span className="absolute right-4 top-4 rounded-full bg-white/20 px-3 py-1 text-xs font-semibold backdrop-blur-sm">
+                      {kat.badge}
+                    </span>
+                  )}
+                  <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
+                    {kat.icon}
+                  </div>
+                  <h3 className="font-heading text-xl font-bold uppercase tracking-wide">{kat.nazov}</h3>
+                  <p className="mt-2 text-sm text-white/80 leading-relaxed">{kat.popis}</p>
                 </div>
-                <h3 className="font-heading text-lg font-bold uppercase tracking-wide text-slate-900">
-                  {kat.nazov}
-                </h3>
-                <p className="mt-2 flex-1 text-sm leading-relaxed text-slate-500">{kat.popis}</p>
-                <div className="mt-6 flex items-center justify-between border-t border-slate-100 pt-5">
+
+                {/* White footer */}
+                <div className="flex items-center justify-between bg-white px-7 py-5">
                   <div>
                     <p className="text-xs text-slate-400">Cena od</p>
-                    <p className="font-heading text-xl font-bold text-slate-900">{kat.cena}</p>
+                    <p className={`font-heading text-2xl font-bold ${kat.lightText}`}>{kat.cena}</p>
                   </div>
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-slate-300 transition-all group-hover:translate-x-1 group-hover:text-slate-900" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                  </svg>
+                  <div className={`flex h-10 w-10 items-center justify-center rounded-full ${kat.lightBg} transition-all group-hover:scale-110`}>
+                    <svg xmlns="http://www.w3.org/2000/svg" className={`h-5 w-5 ${kat.lightText}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                  </div>
                 </div>
               </Link>
             ))}
@@ -258,26 +300,64 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ─── VÝHODY ─── */}
-      <section className="border-b border-slate-100 bg-slate-50 py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-12">
-            <p className="font-heading text-xs font-semibold uppercase tracking-[0.25em] text-slate-400">Prečo Bandasky</p>
-            <h2 className="mt-2 font-heading text-4xl font-bold uppercase tracking-wide text-slate-900">
-              Naše výhody
+      {/* ─── HERO IMAGE SECTION ─── */}
+      <section className="relative h-[420px] overflow-hidden">
+        <Image
+          src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1920&q=80"
+          alt="IBC nádrže sklad"
+          fill
+          className="object-cover"
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-900/60 to-transparent" />
+        <div className="relative mx-auto flex h-full max-w-7xl items-center px-4 sm:px-6 lg:px-8">
+          <div className="max-w-xl">
+            <p className="font-heading text-xs font-semibold uppercase tracking-[0.3em] text-emerald-400">O nás</p>
+            <h2 className="mt-3 font-heading text-4xl font-bold uppercase leading-tight tracking-wide text-white sm:text-5xl">
+              Váš spoľahlivý<br />dodávateľ od 2014
             </h2>
+            <p className="mt-4 leading-relaxed text-slate-300">
+              Viac ako 10 rokov dodávame IBC nádrže firmám, farmám a súkromným zákazníkom. Od Bratislavy po Košice — sme tu pre vás.
+            </p>
+            <Link
+              href="/produkty"
+              className="mt-6 inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-7 py-3.5 font-heading text-sm font-bold uppercase tracking-widest text-white transition-colors hover:bg-emerald-700"
+            >
+              Pozrieť ponuku
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── AKO TO FUNGUJE ─── */}
+      <section className="bg-white py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-14 text-center">
+            <p className="font-heading text-xs font-semibold uppercase tracking-[0.3em] text-emerald-600">Proces</p>
+            <h2 className="mt-3 font-heading text-4xl font-bold uppercase tracking-wide text-slate-900 sm:text-5xl">
+              Ako to funguje
+            </h2>
+            <p className="mx-auto mt-4 max-w-xl text-slate-500">
+              Jednoducho a rýchlo — od výberu nádrže po doručenie priamo k vám.
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {vyhody.map((v) => (
-              <div key={v.nazov} className="rounded-xl border border-slate-200 bg-white p-6">
-                <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-slate-100 text-slate-700">
-                  {v.icon}
+          <div className="relative grid grid-cols-1 gap-8 md:grid-cols-3">
+            {/* Connector line (desktop) */}
+            <div className="absolute top-12 left-1/6 right-1/6 hidden h-px bg-gradient-to-r from-emerald-200 via-blue-200 to-amber-200 md:block" style={{ left: '20%', right: '20%' }} />
+
+            {kroky.map((krok) => (
+              <div key={krok.cislo} className="relative flex flex-col items-center text-center">
+                <div className={`relative flex h-24 w-24 items-center justify-center rounded-2xl border-2 ${krok.borderColor} ${krok.bgColor} shadow-sm`}>
+                  <span className={`font-heading text-3xl font-bold ${krok.color}`}>{krok.cislo}</span>
                 </div>
-                <h3 className="font-heading text-sm font-bold uppercase tracking-wide text-slate-900">
-                  {v.nazov}
+                <h3 className="mt-5 font-heading text-lg font-bold uppercase tracking-wide text-slate-900">
+                  {krok.nazov}
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-500">{v.popis}</p>
+                <p className="mt-2 max-w-xs text-sm leading-relaxed text-slate-500">{krok.popis}</p>
               </div>
             ))}
           </div>
@@ -286,18 +366,23 @@ export default async function HomePage() {
 
       {/* ─── PRODUKTY SKLADOM ─── */}
       {featuredProdukty.length > 0 && (
-        <section className="border-b border-slate-100 bg-white py-20">
+        <section className="bg-slate-50 py-20">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="mb-12 flex items-end justify-between">
+            <div className="mb-12 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
               <div>
-                <p className="font-heading text-xs font-semibold uppercase tracking-[0.25em] text-slate-400">Aktuálna ponuka</p>
-                <h2 className="mt-2 font-heading text-4xl font-bold uppercase tracking-wide text-slate-900">Skladom</h2>
+                <p className="font-heading text-xs font-semibold uppercase tracking-[0.3em] text-emerald-600">Aktuálna ponuka</p>
+                <h2 className="mt-3 font-heading text-4xl font-bold uppercase tracking-wide text-slate-900 sm:text-5xl">
+                  Skladom
+                </h2>
               </div>
               <Link
                 href="/produkty"
-                className="hidden font-heading text-sm font-semibold uppercase tracking-widest text-slate-500 transition-colors hover:text-slate-900 sm:block"
+                className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-2.5 font-heading text-sm font-semibold uppercase tracking-widest text-slate-600 shadow-sm transition-all hover:border-emerald-600 hover:text-emerald-600"
               >
-                Všetky produkty →
+                Všetky nádrže
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
               </Link>
             </div>
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -305,96 +390,78 @@ export default async function HomePage() {
                 <ProduktKarta key={p.id} produkt={p} />
               ))}
             </div>
-            <div className="mt-8 text-center sm:hidden">
-              <Link href="/produkty" className="font-heading text-sm font-semibold uppercase tracking-widest text-slate-500 hover:text-slate-900">
-                Všetky produkty →
-              </Link>
-            </div>
           </div>
         </section>
       )}
 
-      {/* ─── O NÁS ─── */}
-      <section className="border-b border-slate-100 bg-slate-50 py-20">
+      {/* ─── VÝHODY STRIP ─── */}
+      <section className="bg-white py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 items-center gap-14 lg:grid-cols-2">
-            <div>
-              <p className="font-heading text-xs font-semibold uppercase tracking-[0.25em] text-slate-400">O nás</p>
-              <h2 className="mt-2 font-heading text-4xl font-bold uppercase leading-tight tracking-wide text-slate-900">
-                Vaši spoľahliví<br />dodávatelia nádrží
-              </h2>
-              <p className="mt-5 max-w-lg leading-relaxed text-slate-500">
-                Už viac ako 10 rokov dodávame IBC nádrže firmám, farmám a súkromným zákazníkom na celom Slovensku. Pokrývame celé územie od Bratislavy po Košice.
-              </p>
-              <div className="mt-8 space-y-3">
-                {[
-                  'Osobný prístup ku každej objednávke',
-                  'Technické poradenstvo zdarma',
-                  'Flexibilné platobné podmienky pre firmy',
-                ].map((item) => (
-                  <div key={item} className="flex items-center gap-3">
-                    <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-900">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                      </svg>
-                    </div>
-                    <span className="text-sm text-slate-600">{item}</span>
-                  </div>
-                ))}
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              { icon: '🏆', title: 'Certifikovaná kvalita', text: 'Všetky nádrže certifikované pre pitnú aj úžitkovú vodu.' },
+              { icon: '🚛', title: 'Rýchla doprava', text: 'Doručenie do 48 hodín po celom Slovensku.' },
+              { icon: '💬', title: 'Odborné poradenstvo', text: 'Pomôžeme vám vybrať správnu nádrž pre vaše potreby.' },
+              { icon: '🔄', title: 'Záruka a servis', text: 'Plná záruka na nové nádrže, poradenstvo na repasované.' },
+            ].map((item) => (
+              <div key={item.title} className="flex gap-4 rounded-2xl border border-slate-100 bg-slate-50 p-5">
+                <span className="mt-0.5 text-2xl">{item.icon}</span>
+                <div>
+                  <h3 className="font-heading text-sm font-bold uppercase tracking-wide text-slate-900">{item.title}</h3>
+                  <p className="mt-1 text-sm leading-relaxed text-slate-500">{item.text}</p>
+                </div>
               </div>
-              <Link
-                href="/produkty"
-                className="mt-8 inline-flex items-center gap-2 rounded-md border border-slate-200 px-6 py-3 font-heading text-sm font-bold uppercase tracking-widest text-slate-600 transition-all hover:border-slate-900 hover:text-slate-900"
-              >
-                Zobraziť ponuku
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </Link>
-            </div>
-
-            <div className="rounded-xl border border-slate-200 bg-white p-8">
-              <div className="grid grid-cols-2 gap-4">
-                {stats.map((s) => (
-                  <div key={s.popis} className="rounded-lg bg-slate-50 p-6 text-center">
-                    <p className="font-heading text-4xl font-bold text-slate-900">{s.hodnota}</p>
-                    <p className="mt-1 text-sm text-slate-500">{s.popis}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* ─── CTA ─── */}
-      <section className="bg-slate-900 py-20">
-        <div className="mx-auto max-w-4xl px-4 text-center">
-          <p className="font-heading text-xs font-semibold uppercase tracking-[0.25em] text-slate-500">Kontakt</p>
-          <h2 className="mt-3 font-heading text-4xl font-bold uppercase tracking-wide text-white">
-            Máte záujem o cenovú ponuku?
+      <section className="relative overflow-hidden bg-gradient-to-br from-emerald-700 to-teal-800 py-24">
+        <div className="absolute inset-0 opacity-10"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          }}
+        />
+        <div className="relative mx-auto max-w-3xl px-4 text-center">
+          <p className="font-heading text-xs font-semibold uppercase tracking-[0.3em] text-emerald-300">Kontakt</p>
+          <h2 className="mt-4 font-heading text-4xl font-bold uppercase leading-tight tracking-wide text-white sm:text-5xl">
+            Potrebujete IBC nádrž?<br />Ozvite sa nám.
           </h2>
-          <p className="mx-auto mt-4 max-w-lg text-slate-400">
-            Pošlite nezáväzný dopyt — ozveme sa do 24 hodín a pripravíme ponuku na mieru pre vás alebo vašu firmu.
+          <p className="mx-auto mt-5 max-w-lg text-lg text-white/70">
+            Pošlite nezáväzný dopyt — ozveme sa do 24 hodín a pripravíme cenovú ponuku presne pre vás.
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
               href="/produkty"
-              className="inline-block rounded-md bg-white px-10 py-3.5 font-heading text-sm font-bold uppercase tracking-widest text-slate-900 transition-colors hover:bg-slate-100"
+              className="inline-flex items-center gap-2 rounded-xl bg-white px-8 py-4 font-heading text-sm font-bold uppercase tracking-widest text-emerald-700 shadow-lg transition-all hover:bg-emerald-50 hover:shadow-xl"
             >
               Vybrať nádrž
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
             </Link>
             <Link
               href="/kosik"
-              className="inline-block rounded-md border border-slate-700 px-10 py-3.5 font-heading text-sm font-bold uppercase tracking-widest text-slate-300 transition-all hover:border-white hover:text-white"
+              className="inline-flex items-center gap-2 rounded-xl border-2 border-white/30 px-8 py-4 font-heading text-sm font-bold uppercase tracking-widest text-white transition-all hover:border-white/60 hover:bg-white/10"
             >
               Poslať dopyt
             </Link>
           </div>
-          <div className="mt-8 flex items-center justify-center gap-2 text-sm text-slate-600">
-            <a href="tel:+421900000000" className="transition-colors hover:text-slate-400">+421 900 000 000</a>
-            <span>·</span>
-            <a href="mailto:info@bandasky.sk" className="transition-colors hover:text-slate-400">info@bandasky.sk</a>
+          <div className="mt-8 flex flex-col items-center gap-2 sm:flex-row sm:justify-center sm:gap-6">
+            <a href="tel:+421900000000" className="flex items-center gap-2 text-sm text-white/60 transition-colors hover:text-white">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+              </svg>
+              +421 900 000 000
+            </a>
+            <span className="hidden text-white/20 sm:block">·</span>
+            <a href="mailto:info@bandasky.sk" className="flex items-center gap-2 text-sm text-white/60 transition-colors hover:text-white">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+              </svg>
+              info@bandasky.sk
+            </a>
           </div>
         </div>
       </section>

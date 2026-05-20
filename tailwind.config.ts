@@ -8,27 +8,18 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      colors: {
-        accent: {
-          DEFAULT: '#1e6fff',
-          dark: '#1458d6',
-          light: '#60a5fa',
-        },
-        bg: {
-          DEFAULT: '#050d1a',
-          card: '#0a1628',
-          hover: '#0f1e38',
-        },
-        border: {
-          DEFAULT: '#1a2a45',
-        },
-        muted: '#6b7fa3',
-        success: '#22c55e',
-        danger: '#ef4444',
-      },
       fontFamily: {
         heading: ['var(--font-oswald)', 'sans-serif'],
         body: ['var(--font-dm-sans)', 'sans-serif'],
+      },
+      animation: {
+        'float': 'float 6s ease-in-out infinite',
+      },
+      keyframes: {
+        float: {
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(-12px)' },
+        },
       },
     },
   },
