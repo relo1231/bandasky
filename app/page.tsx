@@ -202,10 +202,18 @@ export default async function HomePage() {
 
             {/* Right: floating card */}
             <div className="hidden lg:flex items-center justify-center">
-              <div className="relative w-full max-w-sm animate-float">
+              <div className="animate-float w-full max-w-sm">
                 {/* Main card */}
-                <div className="rounded-2xl bg-white p-6 shadow-2xl">
-                  <div className="mb-5 flex items-center justify-between">
+                <div className="relative rounded-2xl bg-white p-6 shadow-2xl">
+                  {/* Badge — vnútri karty, vpravo hore */}
+                  <div className="absolute -right-3 -top-3 flex h-14 w-14 items-center justify-center rounded-xl bg-amber-400 shadow-lg">
+                    <div className="text-center leading-tight">
+                      <p className="font-heading text-xs font-bold text-white">48h</p>
+                      <p className="font-heading text-[8px] font-bold text-white/80">DOPRAVA</p>
+                    </div>
+                  </div>
+
+                  <div className="mb-5 flex items-center justify-between pr-8">
                     <div>
                       <p className="text-xs font-medium text-slate-400">Najpredávanejší produkt</p>
                       <p className="font-heading text-lg font-bold uppercase tracking-wide text-slate-900">IBC 1000L Nová</p>
@@ -229,7 +237,7 @@ export default async function HomePage() {
 
                   <div className="mt-5 flex items-center justify-between border-t border-slate-100 pt-5">
                     <div>
-                      <p className="text-xs text-slate-400">Cena od</p>
+                      <p className="text-xs text-slate-400">Nová — cena od</p>
                       <p className="font-heading text-3xl font-bold text-emerald-600">89 €</p>
                     </div>
                     <Link href="/produkty" className="rounded-xl bg-emerald-600 px-5 py-2.5 font-heading text-sm font-bold uppercase tracking-widest text-white transition-colors hover:bg-emerald-700">
@@ -238,18 +246,15 @@ export default async function HomePage() {
                   </div>
                 </div>
 
-                {/* Floating badge */}
-                <div className="absolute -right-4 -top-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-400 shadow-lg">
-                  <div className="text-center">
-                    <p className="font-heading text-xs font-bold leading-none text-white">48h</p>
-                    <p className="font-heading text-[9px] font-bold leading-none text-white/80 mt-0.5">DOPRAVA</p>
+                {/* Mini karta — pod hlavnou, nie prekrývajúca */}
+                <div className="mt-3 flex items-center justify-between rounded-xl border border-white/20 bg-white/10 px-5 py-3 backdrop-blur-sm">
+                  <div>
+                    <p className="text-xs text-white/60">Repasované nádrže</p>
+                    <p className="font-heading text-lg font-bold text-white">od 39 €</p>
                   </div>
-                </div>
-
-                {/* Floating mini-card */}
-                <div className="absolute -left-6 -bottom-4 rounded-xl bg-white px-4 py-3 shadow-xl border border-slate-100">
-                  <p className="text-xs text-slate-400">Repasované</p>
-                  <p className="font-heading text-lg font-bold text-slate-900">od <span className="text-emerald-600">39 €</span></p>
+                  <Link href="/produkty?kategoria=repasovane" className="rounded-lg border border-white/30 px-4 py-1.5 font-heading text-xs font-bold uppercase tracking-widest text-white transition-all hover:bg-white/10">
+                    Zobraziť
+                  </Link>
                 </div>
               </div>
             </div>
