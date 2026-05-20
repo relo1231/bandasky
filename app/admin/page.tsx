@@ -1,5 +1,6 @@
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
+import Link from 'next/link'
 import { supabaseServer } from '@/lib/supabase'
 import type { Produkt, Kategoria } from '@/types'
 import { AdminSkladTable } from './AdminSkladTable'
@@ -44,6 +45,22 @@ export default async function AdminPage() {
             <p className="mt-1 text-sm text-[#6b7fa3]">Bandasky – prehľad zásoby</p>
           </div>
           <LogoutButton />
+        </div>
+
+        {/* Nav */}
+        <div className="mb-8 flex gap-2">
+          <Link
+            href="/admin"
+            className="rounded-sm border border-[#1e6fff] bg-[#1e6fff]/10 px-4 py-2 font-heading text-xs uppercase tracking-wide text-[#1e6fff]"
+          >
+            Sklad
+          </Link>
+          <Link
+            href="/admin/dopyty"
+            className="rounded-sm border border-[#1a2a45] px-4 py-2 font-heading text-xs uppercase tracking-wide text-[#6b7fa3] transition-colors hover:border-[#1e6fff] hover:text-[#1e6fff]"
+          >
+            Dopyty
+          </Link>
         </div>
 
         {/* Stats */}

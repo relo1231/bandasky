@@ -33,6 +33,7 @@ export type Dopyt = {
   telefon: string
   sprava: string | null
   stav: 'nový' | 'vybavený' | 'zrušený'
+  poznamka_admin: string | null
   created_at: string
 }
 
