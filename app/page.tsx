@@ -208,8 +208,8 @@ export default async function HomePage() {
                   {/* IBC tank photo */}
                   <div className="relative h-44 w-full overflow-hidden bg-slate-100">
                     <Image
-                      src="https://source.unsplash.com/EaitBYPYh4Y/600x350"
-                      alt="IBC nádrže"
+                      src="https://b2bpartnercdn.vshcdn.net/content/images/product/ibc-kontajner-plastova-paleta-novy_3626.jpg?width=800"
+                      alt="IBC nádrž 1000L nová"
                       fill
                       className="object-cover"
                       sizes="400px"
@@ -352,7 +352,7 @@ export default async function HomePage() {
       {/* ─── HERO IMAGE SECTION ─── */}
       <section className="relative h-[420px] overflow-hidden">
         <Image
-          src="https://source.unsplash.com/EaitBYPYh4Y/1920x600"
+          src="https://b2bpartnercdn.vshcdn.net/content/images/product/ibc-kontajner-reko-1000-l-repasovany_3627.jpg?width=1920"
           alt="IBC nádrže sklad"
           fill
           className="object-cover"

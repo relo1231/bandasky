@@ -87,7 +87,7 @@ export default async function ProduktDetailPage({ params }: Props) {
               />
             ) : (
               <Image
-                src="https://source.unsplash.com/EaitBYPYh4Y/800x800"
+                src="https://b2bpartnercdn.vshcdn.net/content/images/product/ibc-kontajner-plastova-paleta-novy_3626.jpg?width=800"
                 alt="IBC nádrž"
                 fill
                 className="object-cover"

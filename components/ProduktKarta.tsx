@@ -30,10 +30,10 @@ export function ProduktKarta({ produkt }: Props) {
             />
           ) : (
             <Image
-              src="https://source.unsplash.com/EaitBYPYh4Y/600x350"
+              src="https://b2bpartnercdn.vshcdn.net/content/images/product/ibc-kontajner-plastova-paleta-novy_3626.jpg?width=600"
               alt="IBC nádrž"
               fill
-              className="object-cover opacity-80"
+              className="object-cover"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           )}
