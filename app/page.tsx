@@ -336,7 +336,7 @@ export default async function HomePage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+          <div className="mx-auto grid max-w-2xl grid-cols-1 gap-6 sm:grid-cols-2">
             {kategorie.map((kat) => (
               <Link
                 key={kat.href}
