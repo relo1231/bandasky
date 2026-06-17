@@ -35,19 +35,20 @@ type Stats = {
   rokovNaTrhu: number
   maxCenaRepasovane: number | null
   minCenaRepasovane: number | null
+  minCenaNove: number | null
 }
 
 async function getStats(): Promise<Stats> {
-  const { data: katRep } = await supabase
-    .from('kategorie')
-    .select('id')
-    .eq('slug', 'repasovane')
-    .single()
+  const [{ data: katRep }, { data: katNove }] = await Promise.all([
+    supabase.from('kategorie').select('id').eq('slug', 'repasovane').single(),
+    supabase.from('kategorie').select('id').eq('slug', 'nove-nadrze').single(),
+  ])
 
   const [
     { count: produktovSkladom },
     { count: vybavenychDopytov },
     { data: cenyRep },
+    { data: cenyNove },
   ] = await Promise.all([
     supabase
       .from('produkty')
@@ -59,17 +60,15 @@ async function getStats(): Promise<Stats> {
       .select('*', { count: 'exact', head: true })
       .eq('stav', 'vybavený'),
     katRep
-      ? supabase
-          .from('produkty')
-          .select('cena_od')
-          .eq('aktivny', true)
-          .eq('kategoria_id', katRep.id)
-          .not('cena_od', 'is', null)
-          .order('cena_od', { ascending: false })
+      ? supabase.from('produkty').select('cena_od').eq('aktivny', true).eq('kategoria_id', katRep.id).not('cena_od', 'is', null)
+      : Promise.resolve({ data: [] }),
+    katNove
+      ? supabase.from('produkty').select('cena_od').eq('aktivny', true).eq('kategoria_id', katNove.id).not('cena_od', 'is', null)
       : Promise.resolve({ data: [] }),
   ])
 
   const ceny = (cenyRep ?? []).map((p) => p.cena_od as number)
+  const cenyN = (cenyNove ?? []).map((p) => p.cena_od as number)
   const rokovNaTrhu = new Date().getFullYear() - 2014
 
   return {
@@ -78,10 +77,26 @@ async function getStats(): Promise<Stats> {
     rokovNaTrhu,
     maxCenaRepasovane: ceny.length > 0 ? Math.max(...ceny) : null,
     minCenaRepasovane: ceny.length > 0 ? Math.min(...ceny) : null,
+    minCenaNove: cenyN.length > 0 ? Math.min(...cenyN) : null,
   }
 }
 
 const kategorie = [
+  {
+    href: '/produkty?kategoria=nove-nadrze',
+    nazov: 'Nové nádrže',
+    popis: 'Nové IBC nádrže priamo od výrobcu. Certifikované pre pitnú aj úžitkovú vodu.',
+    cena: 'DYNAMIC_NOVE',
+    gradient: 'from-blue-600 to-indigo-700',
+    lightBg: 'bg-blue-50',
+    lightText: 'text-blue-600',
+    badge: 'Nové',
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    ),
+  },
   {
     href: '/produkty?kategoria=repasovane',
     nazov: 'Repasované nádrže',
@@ -336,7 +351,7 @@ export default async function HomePage() {
             </p>
           </div>
 
-          <div className="mx-auto grid max-w-2xl grid-cols-1 gap-6 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {kategorie.map((kat) => (
               <Link
                 key={kat.href}
@@ -365,6 +380,10 @@ export default async function HomePage() {
                       {kat.cena === 'DYNAMIC_REPASOVANE'
                         ? stats.minCenaRepasovane != null
                           ? `${stats.minCenaRepasovane.toLocaleString('sk-SK')} €`
+                          : 'Na dopyt'
+                        : kat.cena === 'DYNAMIC_NOVE'
+                        ? stats.minCenaNove != null
+                          ? `${stats.minCenaNove.toLocaleString('sk-SK')} €`
                           : 'Na dopyt'
                         : kat.cena}
                     </p>
